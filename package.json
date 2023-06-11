@@ -3,6 +3,7 @@
   "displayName": "Open Storybook Story",
   "description": "Open Storybook Story",
   "version": "0.0.1",
+  "publisher": "ygkn",
   "engines": {
     "vscode": "^1.79.0"
   },
