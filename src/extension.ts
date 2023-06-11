@@ -1,26 +1,82 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { loadStoryEntries } from "./loadStoryEntries";
+import { loadStoryIndexers } from "./loadStoryIndexers";
+import { loadCurrentCsf } from "./loadCurrentCsf";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  // TODO: update stuff when workspace updated
+  // TODO: update config etc. when config file updated
+  const workspaceUri = vscode.workspace.workspaceFolders?.[0]?.uri;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "open-storybook-story" is now active!');
+  if (!workspaceUri) {
+    await vscode.window.showErrorMessage("please open a folder as workspace");
+    return;
+  }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('open-storybook-story.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Open Storybook Story!');
-	});
+  // TODO: get `".storybook"` from extension config
+  const configDir = vscode.Uri.joinPath(workspaceUri, ".storybook").path;
+  const workingDir = workspaceUri.path;
 
-	context.subscriptions.push(disposable);
+  console.log(`open-storybook-story: using storybook config "${configDir}"`);
+
+  const [storyIndexers, entries] = await Promise.all([
+    loadStoryIndexers(configDir).then((v) => {
+      console.log(
+        "open-storybook-story: indexers loaded!",
+        v.map((indexer) => indexer.test.toString())
+      );
+      return v;
+    }),
+    loadStoryEntries(configDir, workingDir).then((v) => {
+      console.log(
+        "open-storybook-story: entries loaded!",
+        v.map((entry) => entry.files)
+      );
+      return v;
+    }),
+  ]);
+  console.log("open-storybook-story: READY!!");
+
+  const { toId } = require("@storybook/csf") as typeof import("@storybook/csf");
+
+  let disposable = vscode.commands.registerCommand(
+    "open-storybook-story.open",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
+
+      if (editor === undefined) {
+        // TODO: notify to user
+        return;
+      }
+
+      const absolutePath = editor.document.uri.fsPath;
+
+      // TODO: notify if opened file is not valid CSF
+      const csf = await loadCurrentCsf(
+        workingDir,
+        absolutePath,
+        entries,
+        storyIndexers
+      );
+
+      if (csf.meta.title === undefined) {
+        // TODO: notify to user
+        return;
+      }
+
+      // TODO: open story which cursor active
+      // TODO: get port number by config
+      vscode.env.openExternal(
+        vscode.Uri.parse(
+          `http://localhost:6006/?path=/story/${toId(csf.meta.title)}`
+        )
+      );
+    }
+  );
+
+  context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

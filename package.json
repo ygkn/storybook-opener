@@ -14,8 +14,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "open-storybook-story.helloWorld",
-        "title": "Hello World"
+        "command": "open-storybook-story.open",
+        "title": "Open Story",
+        "category": "Open Storybook Story"
       }
     ]
   },
