@@ -47,19 +47,27 @@ export async function activate(
       const editor = vscode.window.activeTextEditor;
 
       if (editor === undefined) {
-        // TODO: notify to user
+        await vscode.window.showInformationMessage(
+          "No active editor found. Please focus to editor opening story."
+        );
         return;
       }
 
       const absolutePath = editor.document.uri.fsPath;
 
-      // TODO: notify if opened file is not valid CSF
       const csf = await loadCurrentCsf(
         workingDir,
         absolutePath,
         entries,
         storyIndexers
       );
+
+      if (csf === undefined) {
+        await vscode.window.showInformationMessage(
+          "Your current active editor is not story. Please focus to editor opening story."
+        );
+        return;
+      }
 
       if (csf.meta.title === undefined) {
         // TODO: notify to user

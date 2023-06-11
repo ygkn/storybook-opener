@@ -35,7 +35,9 @@ export async function loadCurrentCsf(
     indexer.test.exec(absolutePath)
   );
   if (!storyIndexer) {
-    throw new Error(`No matching story indexer found for ${absolutePath}`);
+    // throw new Error(`No matching story indexer found for ${absolutePath}`);
+
+    return undefined;
   }
   const csf = await storyIndexer.indexer(absolutePath, { makeTitle });
 
