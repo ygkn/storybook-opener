@@ -18,7 +18,9 @@
     "type": "git",
     "url": "https://github.com/ygkn/storybook-opener.git"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:.storybook"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
