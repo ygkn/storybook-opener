@@ -19,30 +19,30 @@ export async function activate(
   const configDir = vscode.Uri.joinPath(workspaceUri, ".storybook").path;
   const workingDir = workspaceUri.path;
 
-  console.log(`open-storybook-story: using storybook config "${configDir}"`);
+  console.log(`storybook-opener: using storybook config "${configDir}"`);
 
   const [storyIndexers, entries] = await Promise.all([
     loadStoryIndexers(configDir).then((v) => {
       console.log(
-        "open-storybook-story: indexers loaded!",
+        "storybook-opener: indexers loaded!",
         v.map((indexer) => indexer.test.toString())
       );
       return v;
     }),
     loadStoryEntries(configDir, workingDir).then((v) => {
       console.log(
-        "open-storybook-story: entries loaded!",
+        "storybook-opener: entries loaded!",
         v.map((entry) => entry.files)
       );
       return v;
     }),
   ]);
-  console.log("open-storybook-story: READY!!");
+  console.log("storybook-opener: READY!!");
 
   const { toId } = require("@storybook/csf") as typeof import("@storybook/csf");
 
   let disposable = vscode.commands.registerCommand(
-    "open-storybook-story.open",
+    "storybook-opener.open",
     async () => {
       const editor = vscode.window.activeTextEditor;
 

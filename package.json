@@ -1,7 +1,7 @@
 {
-  "name": "open-storybook-story",
-  "displayName": "Open Storybook Story",
-  "description": "Open Storybook Story",
+  "name": "storybook-opener",
+  "displayName": "Storybook Opener",
+  "description": "Storybook Opener",
   "version": "0.0.1",
   "publisher": "ygkn",
   "engines": {
@@ -10,22 +10,22 @@
   "categories": [
     "Other"
   ],
-  "homepage": "https://github.com/ygkn/open-storybook-story#readme",
+  "homepage": "https://github.com/ygkn/storybook-opener#readme",
   "bugs": {
-    "url": "https://github.com/ygkn/open-storybook-story/issues"
+    "url": "https://github.com/ygkn/storybook-opener/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ygkn/open-storybook-story.git"
+    "url": "https://github.com/ygkn/storybook-opener.git"
   },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "open-storybook-story.open",
+        "command": "storybook-opener.open",
         "title": "Open Story",
-        "category": "Open Storybook Story"
+        "category": "Storybook Opener"
       }
     ]
   },
