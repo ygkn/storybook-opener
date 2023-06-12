@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { loadStoryEntries } from "./loadStoryEntries";
 import { loadStoryIndexers } from "./loadStoryIndexers";
 import { loadCurrentCsf } from "./loadCurrentCsf";
+import { requireFromWorkSpace } from "./requireFromWorkspace";
 
 export async function activate(
   context: vscode.ExtensionContext
@@ -39,7 +40,9 @@ export async function activate(
   ]);
   console.log("storybook-opener: READY!!");
 
-  const { toId } = require("@storybook/csf") as typeof import("@storybook/csf");
+  const { toId } = requireFromWorkSpace(
+    "@storybook/csf"
+  ) as typeof import("@storybook/csf");
 
   let disposable = vscode.commands.registerCommand(
     "storybook-opener.open",
