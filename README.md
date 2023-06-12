@@ -1,4 +1,7 @@
-# Storybook Opener
+<h1 align="center">
+   <img src="./assets/icon.png" width="40" height="40" />
+   Storybook Opener
+</h1>
 
 A Visual Studio Code extension for effortless story opening
 
@@ -11,8 +14,8 @@ A Visual Studio Code extension for effortless story opening
 
 ## Features
 
-- [x] Respects your Storybook configuration (in `.storybook` folder)
-- [x] Respects your Story (titles, etc)
+- Respects your Storybook configuration (in `.storybook` folder)
+- Respects your Story (titles, etc)
 
 > **Note**
 > This extension **does not** launch stroybook.
