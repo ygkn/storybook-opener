@@ -2,7 +2,7 @@
   "name": "storybook-opener",
   "displayName": "Storybook Opener",
   "description": "A Visual Studio Code extension for effortless story opening",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "ygkn",
   "engines": {
     "vscode": "^1.79.0"
