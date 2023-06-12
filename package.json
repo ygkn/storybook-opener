@@ -1,11 +1,12 @@
 {
   "name": "storybook-opener",
   "displayName": "Storybook Opener",
+  "icon": "./assets/icon.png",
   "description": "A Visual Studio Code extension for effortless story opening",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "ygkn",
   "engines": {
-    "vscode": "^1.79.0"
+    "vscode": "^1.60.0"
   },
   "categories": [
     "Other"
@@ -27,9 +28,30 @@
       {
         "command": "storybook-opener.open",
         "title": "Open Story",
-        "category": "Storybook Opener"
+        "category": "Storybook Opener",
+        "when": "storybook-opener.isActiveEditorCsf",
+        "icon": {
+          "light": "./assets/icon-black.svg",
+          "dark": "./assets/icon-white.svg"
+        }
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "storybook-opener.isActiveEditorCsf",
+          "command": "storybook-opener.open",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "storybook-opener.isActiveEditorCsf",
+          "command": "storybook-opener.open",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -44,7 +66,7 @@
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "20.2.5",
-    "@types/vscode": "^1.79.0",
+    "@types/vscode": "^1.60.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "@vscode/test-electron": "^2.3.2",
