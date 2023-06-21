@@ -42,7 +42,11 @@ export async function activate(
 
   let storybookConfigWatcher: vscode.FileSystemWatcher | undefined;
 
-  const reload = async () => {
+  const reload = async ({ noCache }: { noCache?: boolean } = {}) => {
+    if (noCache) {
+      workspaceCache.delete(workingDir);
+    }
+
     const setActiveFileUrl = await getOrFallbackFromWorkspaceCache(
       workingDir,
       async () => {
@@ -65,9 +69,9 @@ export async function activate(
 
         context.subscriptions.push(storybookConfigWatcher);
 
-        storybookConfigWatcher.onDidCreate(() => reload());
-        storybookConfigWatcher.onDidChange(() => reload());
-        storybookConfigWatcher.onDidDelete(() => reload());
+        storybookConfigWatcher.onDidCreate(() => reload({ noCache: true }));
+        storybookConfigWatcher.onDidChange(() => reload({ noCache: true }));
+        storybookConfigWatcher.onDidDelete(() => reload({ noCache: true }));
 
         try {
           const getStoryUrlFromPath = await loadStoryUrlGetter(
@@ -121,8 +125,7 @@ export async function activate(
       if (
         event.affectsConfiguration("storybook-opener.storybookOption.configDir")
       ) {
-        workspaceCache.delete(workingDir);
-        reload();
+        reload({ noCache: true });
       }
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
