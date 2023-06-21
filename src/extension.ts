@@ -1,8 +1,5 @@
 import * as vscode from "vscode";
-import { loadCurrentCsf } from "./loadCurrentCsf";
-import { loadStoryEntries } from "./loadStoryEntries";
-import { loadStoryIndexers } from "./loadStoryIndexers";
-import { requireFromWorkSpace } from "./requireFromWorkspace";
+import { loadStoryUrlGetter } from "./getGetStoryUrl";
 
 type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
@@ -42,74 +39,24 @@ export async function activate(
 
   let storyUrl: string | null = null;
 
-  const { toId } = requireFromWorkSpace(
-    "@storybook/csf"
-  ) as typeof import("@storybook/csf");
-
   console.log(`storybook-opener: using storybook config "${configDir}"`);
 
   const setIsActiveEditorCsf = await getOrFallbackFromWorkspaceCache(
     workingDir,
     async () => {
-      const [storyIndexers, entries] = await Promise.all([
-        loadStoryIndexers(configDir).then((v) => {
-          console.log(
-            "storybook-opener: indexers loaded!",
-            v.map((indexer) => indexer.test.toString())
-          );
-          return v;
-        }),
-        loadStoryEntries(configDir, workingDir).then((v) => {
-          console.log(
-            "storybook-opener: entries loaded!",
-            v.map((entry) => entry.files)
-          );
-          return v;
-        }),
-      ]);
-
-      return async (editor: vscode.TextEditor | undefined): Promise<void> => {
-        if (editor === undefined) {
-          storyUrl = null;
-
-          vscode.commands.executeCommand(
-            "setContext",
-            "storybook-opener.isActiveEditorCsf",
-            false
-          );
-
-          return;
-        }
-
-        const absolutePath = editor.document.uri.fsPath;
-
-        const csf = await loadCurrentCsf(
-          workingDir,
-          absolutePath,
-          entries,
-          storyIndexers
-        );
-
-        if (csf?.meta.title === undefined) {
-          storyUrl = null;
-
-          vscode.commands.executeCommand(
-            "setContext",
-            "storybook-opener.isActiveEditorCsf",
-            false
-          );
-          return;
-        }
-
-        // TODO: get port number by config
-        storyUrl = `http://localhost:6006/?path=/story/${toId(csf.meta.title)}`;
-
-        console.log("set story url:", storyUrl);
+      const getStoryUrlFromPath = await loadStoryUrlGetter(
+        configDir,
+        workingDir
+      );
+      return async (editor) => {
+        storyUrl =
+          (editor && (await getStoryUrlFromPath(editor.document.uri.fsPath))) ??
+          null;
 
         vscode.commands.executeCommand(
           "setContext",
           "storybook-opener.isActiveEditorCsf",
-          true
+          storyUrl !== null
         );
       };
     }
