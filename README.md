@@ -5,19 +5,55 @@
 
 A Visual Studio Code extension for effortless story opening
 
+## Features
+
+- Quickly open Storybook URL from your stories files (`*.stories.{t,j}sx`) and docs files (`*.mdx`) in your browser
+- Run the Storybook server when it is not started
+- Smartly follow your project settings
+
+## Usage
+
 1. Open folder containing Storybook configuration as root (`/.storybook` folder)
-2. Open component story format file in editor(`*.stories.{t,j}sx`, `*.mdx` etc. It depens your storybook config)
+2. Open component story format file in editor(`*.stories.{t,j}sx`, `*.mdx` etc)
 3. **You can acesss storybook story in browser quickly!**
    - Click [editor actions](https://code.visualstudio.com/api/ux-guidelines/editor-actions) button (you might see it in the editor toolbar)
    - Click `Open Story` from editor context (right-click) menu
    - Run `Storybook Opener: Open Story` from command palette
 
-## Features
+## Settings
 
-- Respects your Storybook configuration (in `.storybook` folder)
-- Respects your Story (titles, etc)
+### Storybook Option
 
-> **Note**
-> This extension **does not** launch stroybook.
->
-> Please run storybook before open stories.
+Usually Storybook options are different for each project, so it is recommended to save them as workspace settings.
+
+```jsonc
+{
+  /**
+   * Options to get Storybook URL
+   */
+
+  // Directory where to load Storybook configurations from
+  // Same to `-c` / `--config-dir` option of Storybook CLI Options
+  "storybook-opener.storybookOption.configDir": ".storybook",
+
+  // Host to run Storybook
+  // Same to `-h` / `--host` option of Storybook CLI Options
+  "storybook-opener.storybookOption.host": "localhost",
+
+  // Serve Storybook over HTTPS
+  // Same to `--https` option of Storybook CLI Options
+  "storybook-opener.storybookOption.https": false,
+
+  // Port to run Storybook
+  // Same to `-p` / `--port` option of Storybook CLI Options
+  "storybook-opener.storybookOption.port": 6006,
+
+  /**
+   * Options to run Storybook
+   */
+
+  // Command to run when starting a Storybook.
+  // By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it.
+  "storybook-opener.storybookOption.startCommand": ""
+}
+```
