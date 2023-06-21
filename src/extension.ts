@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
 import { loadStoryUrlGetter } from "./getGetStoryUrl";
+import waitOn from "wait-on";
+
+const fetch = (...args: Parameters<typeof import("node-fetch")["default"]>) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
@@ -148,6 +152,59 @@ export async function activate(
           "Please focus to editor opening story."
         );
         return;
+      }
+
+      const storybookStarted = await fetch(storyUrl, {})
+        .then((response) => response.ok)
+        .catch(() => false);
+
+      if (!storybookStarted) {
+        await vscode.window
+          .showInformationMessage(
+            "Storybook Server seems to have not been started yet. Would you like to start?",
+            "Yes",
+            "No"
+          )
+          .then(async (answer) => {
+            if (answer !== "Yes") {
+              return;
+            }
+
+            const exists = async (filename: string) => {
+              try {
+                await vscode.workspace.fs.stat(
+                  vscode.Uri.joinPath(workspaceUri, filename)
+                );
+                return true;
+              } catch {
+                return false;
+              }
+            };
+
+            const command =
+              vscode.workspace
+                .getConfiguration("storybook-opener.storybookOption")
+                .get("startCommand") ?? //
+              (await exists("pnpm-lock.yaml"))
+                ? "pnpm run storybook --no-open"
+                : (await exists("yarn.lock"))
+                ? "yarn storybook --no-open"
+                : "npm run storybook --no-open";
+
+            const newTerminal = vscode.window.createTerminal({
+              name: "Run Storybook",
+            });
+            newTerminal.show();
+            newTerminal.sendText(command, true);
+
+            if (storyUrl) {
+              await waitOn({
+                resources: [storyUrl],
+              });
+
+              await new Promise((res) => setTimeout(res, 1000));
+            }
+          });
       }
 
       vscode.env.openExternal(vscode.Uri.parse(storyUrl));
