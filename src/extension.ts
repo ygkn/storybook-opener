@@ -129,6 +129,17 @@ export async function activate(
       workspaceCache.get(workingDir)?.(editor);
     }),
     vscode.commands.registerCommand("storybook-opener.open", async () => {
+      if (workspaceCache.get(workingDir) === undefined) {
+        await vscode.window.showErrorMessage(
+          [
+            "Something wrong when loading main config.",
+            `Check your config directory ${vscode.workspace
+              .getConfiguration("storybook-opener.storybookOption")
+              .get("configDir")!} is exists and valid.`,
+          ].join(" ")
+        );
+      }
+
       if (storyUrl === null) {
         await vscode.window.showInformationMessage(
           "Please focus to editor opening story."
