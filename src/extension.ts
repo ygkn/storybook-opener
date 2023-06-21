@@ -7,8 +7,8 @@ const workspaceCache = new Map<string, WorkspaceCacheItem>();
 
 const getOrFallbackFromWorkspaceCache = async (
   key: string,
-  fallback: () => Promise<WorkspaceCacheItem>
-): Promise<WorkspaceCacheItem> => {
+  fallback: () => Promise<WorkspaceCacheItem | undefined>
+): Promise<WorkspaceCacheItem | undefined> => {
   const cached = workspaceCache.get(key);
 
   if (cached !== undefined) {
@@ -16,6 +16,10 @@ const getOrFallbackFromWorkspaceCache = async (
   }
 
   const fallbackResult = await fallback();
+
+  if (!fallbackResult) {
+    return;
+  }
 
   workspaceCache.set(key, fallbackResult);
 
@@ -25,7 +29,6 @@ const getOrFallbackFromWorkspaceCache = async (
 export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  // TODO: update config etc. when config file updated
   const workspaceUri = vscode.workspace.workspaceFolders?.[0]?.uri;
 
   if (!workspaceUri) {
@@ -33,46 +36,99 @@ export async function activate(
     return;
   }
 
-  // TODO: get `".storybook"` from extension config
-  const configDir = vscode.Uri.joinPath(workspaceUri, ".storybook").path;
   const workingDir = workspaceUri.path;
 
   let storyUrl: string | null = null;
 
-  console.log(`storybook-opener: using storybook config "${configDir}"`);
+  let storybookConfigWatcher: vscode.FileSystemWatcher | undefined;
 
-  const setIsActiveEditorCsf = await getOrFallbackFromWorkspaceCache(
-    workingDir,
-    async () => {
-      const getStoryUrlFromPath = await loadStoryUrlGetter({
-        configDir,
-        workingDir,
-      });
-      return async (editor) => {
-        storyUrl =
-          (editor && (await getStoryUrlFromPath(editor.document.uri.fsPath))) ??
-          null;
+  const reload = async () => {
+    const setActiveFileUrl = await getOrFallbackFromWorkspaceCache(
+      workingDir,
+      async () => {
+        storybookConfigWatcher?.dispose();
 
-        vscode.commands.executeCommand(
-          "setContext",
-          "storybook-opener.isActiveEditorCsf",
-          storyUrl !== null
+        const config = vscode.workspace.getConfiguration(
+          "storybook-opener.storybookOption"
         );
-      };
-    }
-  );
 
-  console.log("storybook-opener: READY!!");
+        const configDirUri = vscode.Uri.joinPath(
+          workspaceUri,
+          config.get<string>("configDir")!
+        );
+
+        const configDir = configDirUri.path;
+
+        storybookConfigWatcher = vscode.workspace.createFileSystemWatcher(
+          vscode.Uri.joinPath(configDirUri, "**").path
+        );
+
+        context.subscriptions.push(storybookConfigWatcher);
+
+        storybookConfigWatcher.onDidCreate(() => reload());
+        storybookConfigWatcher.onDidChange(() => reload());
+        storybookConfigWatcher.onDidDelete(() => reload());
+
+        try {
+          const getStoryUrlFromPath = await loadStoryUrlGetter(
+            {
+              configDir,
+              workingDir,
+            },
+            () => {
+              const config = vscode.workspace.getConfiguration(
+                "storybook-opener.storybookOption"
+              );
+              return {
+                port: config.get<number>("port")!,
+                host: config.get<string>("host")!,
+                https: config.get<boolean>("https")!,
+              };
+            }
+          );
+
+          console.log("storybook-opener: READY!!");
+
+          return async (editor) => {
+            storyUrl =
+              (editor &&
+                (await getStoryUrlFromPath(editor.document.uri.fsPath))) ??
+              null;
+
+            vscode.commands.executeCommand(
+              "setContext",
+              "storybook-opener.isActiveEditorCsf",
+              storyUrl !== null
+            );
+          };
+        } catch (e) {
+          // TODO: error handling when storybook config file not found
+
+          console.log(e);
+
+          return;
+        }
+      }
+    );
+
+    setActiveFileUrl?.(vscode.window.activeTextEditor);
+  };
+
+  reload();
 
   context.subscriptions.push(
-    vscode.window.onDidChangeActiveTextEditor(setIsActiveEditorCsf)
-  );
-
-  setIsActiveEditorCsf(vscode.window.activeTextEditor);
-
-  let disposable = vscode.commands.registerCommand(
-    "storybook-opener.open",
-    async () => {
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (
+        event.affectsConfiguration("storybook-opener.storybookOption.configDir")
+      ) {
+        workspaceCache.delete(workingDir);
+        reload();
+      }
+    }),
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+      workspaceCache.get(workingDir)?.(editor);
+    }),
+    vscode.commands.registerCommand("storybook-opener.open", async () => {
       if (storyUrl === null) {
         await vscode.window.showInformationMessage(
           "Please focus to editor opening story."
@@ -80,12 +136,9 @@ export async function activate(
         return;
       }
 
-      // TODO: open story which cursor active
       vscode.env.openExternal(vscode.Uri.parse(storyUrl));
-    }
+    })
   );
-
-  context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}

@@ -20,7 +20,7 @@
     "url": "https://github.com/ygkn/storybook-opener.git"
   },
   "activationEvents": [
-    "workspaceContains:.storybook"
+    "workspaceContains:*"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -51,6 +51,31 @@
           "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "title": "Storybook Opener",
+      "properties": {
+        "storybook-opener.storybookOption.configDir": {
+          "type": "string",
+          "default": ".storybook",
+          "markdownDescription": "Directory where to load Storybook configurations from\n\nSame to `-c` / `--config-dir` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)"
+        },
+        "storybook-opener.storybookOption.port": {
+          "type": "number",
+          "markdownDescription": "Port to run Storybook\n\nSame to `-p` / `--port` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
+          "default": 6006
+        },
+        "storybook-opener.storybookOption.host": {
+          "type": "string",
+          "markdownDescription": "Host to run Storybook\n\nSame to `-h` / `--host` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
+          "default": "localhost"
+        },
+        "storybook-opener.storybookOption.https": {
+          "type": "boolean",
+          "markdownDescription": "Serve Storybook over HTTPS\n\nSame to `--https` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
+          "default": false
+        }
+      }
     }
   },
   "scripts": {

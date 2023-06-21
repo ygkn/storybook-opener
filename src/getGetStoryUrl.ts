@@ -22,10 +22,14 @@ function isDocsMdx(absolutePath: string) {
   return /(?<!\.stories)\.mdx$/i.test(absolutePath);
 }
 
-export const loadStoryUrlGetter = async ({
-  configDir,
-  workingDir,
-}: Directories) => {
+export const loadStoryUrlGetter = async (
+  { configDir, workingDir }: Directories,
+  getOption: () => {
+    port: number;
+    host: string;
+    https: boolean;
+  }
+) => {
   const { normalizeStories } = requireFromWorkSpace(
     "@storybook/core-common"
   ) as typeof import("@storybook/core-common");
@@ -159,6 +163,13 @@ export const loadStoryUrlGetter = async ({
       }
     }
 
-    return id && `http://localhost:6006/?path=/${type}/${id}`;
+    const option = getOption();
+
+    return (
+      id &&
+      `${option.https ? "https" : "http"}://${option.host}:${
+        option.port
+      }/?path=/${type}/${id}`
+    );
   };
 };
