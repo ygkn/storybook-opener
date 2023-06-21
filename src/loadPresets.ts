@@ -1,7 +1,8 @@
 import { join } from "path";
 import { requireFromWorkSpace } from "./requireFromWorkspace";
+import { Directories } from "./types/Directories";
 
-export async function loadPresets(configDir: string) {
+export async function loadPresets({ workingDir, configDir }: Directories) {
   const { loadMainConfig, loadAllPresets, resolveAddonName } =
     requireFromWorkSpace(
       "@storybook/core-common"
@@ -9,11 +10,11 @@ export async function loadPresets(configDir: string) {
   const { packageJson } = (await (
     requireFromWorkSpace("read-pkg-up") as typeof import("read-pkg-up")
   )({
-    cwd: configDir,
+    cwd: workingDir,
   }))!;
 
   global.process.cwd = function () {
-    return configDir;
+    return workingDir;
   };
 
   type CoreConfig = import("@storybook/types").CoreConfig;

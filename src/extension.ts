@@ -44,10 +44,10 @@ export async function activate(
   const setIsActiveEditorCsf = await getOrFallbackFromWorkspaceCache(
     workingDir,
     async () => {
-      const getStoryUrlFromPath = await loadStoryUrlGetter(
+      const getStoryUrlFromPath = await loadStoryUrlGetter({
         configDir,
-        workingDir
-      );
+        workingDir,
+      });
       return async (editor) => {
         storyUrl =
           (editor && (await getStoryUrlFromPath(editor.document.uri.fsPath))) ??

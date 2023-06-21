@@ -12,6 +12,7 @@ import type {
   StorybookConfig,
   Tag,
 } from "@storybook/types";
+import { Directories } from "./types/Directories";
 
 /**
  * code from StoryIndexGenerator.prototype.isDocsMdx()
@@ -21,15 +22,15 @@ function isDocsMdx(absolutePath: string) {
   return /(?<!\.stories)\.mdx$/i.test(absolutePath);
 }
 
-export const loadStoryUrlGetter = async (
-  configDir: string,
-  workingDir: string
-) => {
+export const loadStoryUrlGetter = async ({
+  configDir,
+  workingDir,
+}: Directories) => {
   const { normalizeStories } = requireFromWorkSpace(
     "@storybook/core-common"
   ) as typeof import("@storybook/core-common");
 
-  const presets = await loadPresets(configDir);
+  const presets = await loadPresets({ configDir, workingDir });
 
   const [feature, storyIndexers, stories, docsOptions] = await Promise.all([
     presets.apply<StorybookConfig["features"]>("features"),
