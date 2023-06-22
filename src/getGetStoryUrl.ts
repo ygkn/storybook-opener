@@ -74,102 +74,127 @@ export const loadStoryUrlGetter = async (
 
   const glob = requireFromWorkSpace("globby") as typeof import("globby");
 
-  return async (absolutePath: string): Promise<string | undefined> => {
-    let type: "docs" | "story" = isDocsMdx(absolutePath) ? "docs" : "story";
-    let id: string | undefined;
+  // same algorithm of `StoryIndexGenerator.prototype.extractDocs`
+  // https://github.com/storybookjs/storybook/blob/next/code/lib/core-server/src/utils/StoryIndexGenerator.ts
+  const getDocsPath = async (absolutePath: string) => {
+    const relativePath = path.relative(workingDir, absolutePath);
 
-    // code from https://github.com/storybookjs/storybook/blob/6fddbfb859c31ff1707b9543c09986fa6216118f/code/lib/core-server/src/utils/StoryIndexGenerator.ts
-    if (type === "docs") {
-      const relativePath = path.relative(workingDir, absolutePath);
-
-      if (!feature?.storyStoreV7) {
-        return undefined;
-      }
-
-      const normalizedPath = normalizeStoryPath(relativePath);
-      const importPath = slash(normalizedPath);
-
-      const content = await fs.readFile(absolutePath, "utf8");
-
-      const result: {
-        title?: ComponentTitle;
-        of?: Path;
-        name?: StoryName;
-        isTemplate?: boolean;
-        imports?: Path[];
-        tags?: Tag[];
-      } = analyze(content);
-
-      // Templates are not indexed
-      if (result.isTemplate) {
-        return undefined;
-      }
-
-      let csf: IndexedCSFFile | undefined;
-      if (result.of) {
-        const absoluteOf = path.resolve(
-          workingDir,
-          normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of))
-        );
-
-        const ofDir = path.dirname(absoluteOf);
-
-        const absoluteOfPath = (
-          await Promise.all(
-            normalizedStories.map(
-              async ({ files }) => await glob(slash(path.join(ofDir, files)))
-            )
-          )
-        )
-          .flat()
-          .find((path) => path.startsWith(absoluteOf));
-
-        if (absoluteOfPath) {
-          csf = await loadCurrentCsf(
-            workingDir,
-            absoluteOfPath,
-            normalizedStories,
-            storyIndexers
-          );
-        }
-      }
-
-      const title =
-        csf?.meta.title ??
-        userOrAutoTitle(importPath, normalizedStories, result.title);
-
-      id = title && toId(title);
+    if (!feature?.storyStoreV7) {
+      return undefined;
     }
 
-    if (type === "story") {
-      const csf = await loadCurrentCsf(
+    const normalizedPath = normalizeStoryPath(relativePath);
+    const importPath = slash(normalizedPath);
+
+    const content = await fs.readFile(absolutePath, "utf8");
+
+    const result: {
+      title?: ComponentTitle;
+      of?: Path;
+      name?: StoryName;
+      isTemplate?: boolean;
+      imports?: Path[];
+      tags?: Tag[];
+    } = analyze(content);
+
+    // Templates are not indexed
+    if (result.isTemplate) {
+      return undefined;
+    }
+
+    let csf: IndexedCSFFile | undefined;
+    if (result.of) {
+      const absoluteOf = path.resolve(
         workingDir,
-        absolutePath,
-        normalizedStories,
-        storyIndexers
+        normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of))
       );
-      id = csf?.meta.title && toId(csf.meta.title);
 
-      const { autodocs } = docsOptions;
+      const ofDir = path.dirname(absoluteOf);
 
-      const componentTags = csf?.meta.tags || [];
+      const absoluteOfPath = (
+        await glob(
+          normalizedStories.map(({ files }) => slash(path.join(ofDir, files)))
+        )
+      ).find((path) => path.startsWith(absoluteOf));
 
-      const componentAutodocs = componentTags.includes("autodocs");
-      const autodocsOptedIn =
-        autodocs === true || (autodocs === "tag" && componentAutodocs);
-
-      if (componentTags.includes("stories-mdx") || autodocsOptedIn) {
-        type = "docs";
+      if (absoluteOfPath) {
+        csf = await loadCurrentCsf(
+          workingDir,
+          absoluteOfPath,
+          normalizedStories,
+          storyIndexers
+        );
       }
     }
+
+    const title =
+      csf?.meta.title ??
+      userOrAutoTitle(importPath, normalizedStories, result.title);
+
+    return title && `/docs/${toId(title)}`;
+  };
+
+  // same algorithm of `StoryIndexGenerator.prototype.extractStories`
+  // https://github.com/storybookjs/storybook/blob/next/code/lib/core-server/src/utils/StoryIndexGenerator.ts
+  const getStoryPath = async (absolutePath: string) => {
+    const csf = await loadCurrentCsf(
+      workingDir,
+      absolutePath,
+      normalizedStories,
+      storyIndexers
+    );
+
+    const { autodocs } = docsOptions;
+
+    const componentTags = csf?.meta.tags || [];
+
+    const componentAutodocs = componentTags.includes("autodocs");
+    const autodocsOptedIn =
+      autodocs === true || (autodocs === "tag" && componentAutodocs);
+
+    return (
+      csf?.meta.title &&
+      `/${
+        componentTags.includes("stories-mdx") || autodocsOptedIn
+          ? "docs"
+          : "stories"
+      }/${toId(csf.meta.title)}`
+    );
+  };
+
+  const getColocatedStoryPath = async (absolutePath: string) => {
+    const dirname = path.dirname(absolutePath);
+
+    // Leading (zero or more) dot(s) and the following dot(s)
+    const filename = path.basename(absolutePath).replace(/^(\.*[^.]+).*/, "$1");
+
+    const absoluteFilename = path.join(dirname, filename);
+
+    const absoluteStoryPath = (
+      await glob(
+        normalizedStories.map(({ files }) => slash(path.join(dirname, files)))
+      )
+    ).find((path) => path.startsWith(absoluteFilename));
+
+    return absoluteStoryPath && getStoryPath(absoluteStoryPath);
+  };
+
+  return async (absolutePath: string): Promise<string | undefined> => {
+    const path =
+      (isDocsMdx(absolutePath)
+        ? await getDocsPath(absolutePath)
+        : await getStoryPath(absolutePath)) ||
+      (await getColocatedStoryPath(absolutePath));
+
+    console.log(path);
 
     const option = getOption();
 
     return (
-      id &&
+      path &&
       `${option.https ? "https" : "http"}://${option.host}:${
         option.port
-      }/?path=/${type}/${id}`
+      }/?path=${path}`
     );
   };
 };
