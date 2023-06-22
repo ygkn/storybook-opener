@@ -149,7 +149,10 @@ export async function activate(
 
       if (storyUrl === null) {
         await vscode.window.showInformationMessage(
-          "Please focus to editor opening story."
+          [
+            "Something went wrong when get or load yor story/docs file.",
+            "Check opening file is valid or same name to story file.",
+          ].join(" ")
         );
         return;
       }

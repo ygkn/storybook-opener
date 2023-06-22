@@ -3,7 +3,7 @@
       <img src="./assets/icon.png" width="32" height="32" alt="" />
       Storybook Opener
    </h1>
-   <p>A Visual Studio Code extension for effortless story opening</p>
+   <p>A Visual Studio Code extension for effortless storybook opening</p>
 </div>
 
 ## Features
@@ -16,11 +16,11 @@
 ## Usage
 
 1. Open folder containing Storybook configuration as root (`/.storybook` folder)
-2. Open component story format file in editor(`*.stories.{t,j}sx`, `*.mdx` etc)
+2. Open component story or related file in editor(`*.stories.{t,j}sx`, `*.mdx`, `*.test.ts`, `*.module.css` etc)
 3. **You can acesss storybook story in browser quickly!**
    - Click [editor actions](https://code.visualstudio.com/api/ux-guidelines/editor-actions) button (you might see it in the editor toolbar)
-   - Click `Open Story` from editor context (right-click) menu
-   - Run `Storybook Opener: Open Story` from command palette
+   - Click `Open Storybook` from editor context (right-click) menu
+   - Run `Storybook Opener: Open Storybook` from command palette
 
 ## Settings
 

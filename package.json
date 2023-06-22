@@ -27,7 +27,7 @@
     "commands": [
       {
         "command": "storybook-opener.open",
-        "title": "Open Story",
+        "title": "Open Storybook",
         "category": "Storybook Opener",
         "when": "storybook-opener.isActiveEditorCsf",
         "icon": {
