@@ -1,14 +1,22 @@
 <div align="center">
-   <h1>
-      <img src="./assets/icon.png" width="32" height="32" alt="" />
-      Storybook Opener
-   </h1>
-   <p>A Visual Studio Code extension for effortless storybook opening</p>
+  <h1>
+    <img src="./assets/icon.png" width="32" height="32" alt="" />
+    Storybook Opener
+  </h1>
+  <p>A Visual Studio Code extension for effortless storybook opening</p>
+  <video
+    src="https://github.com/ygkn/storybook-opener/assets/14973783/fa81be10-466e-40ee-a7b6-8c86ba97de05"
+    width="1280"
+    height="832"
+  >
+    <img
+      src="https://github.com/ygkn/storybook-opener/assets/14973783/2cc56325-a572-42ff-9c30-78b2da0b3adb"
+      width="1280"
+      height="832"
+      alt="Demo video"
+    />
+  </video>
 </div>
-
-<video src="https://github.com/ygkn/storybook-opener/assets/14973783/4abd1316-2ef5-42df-ac03-3e2de4939b7b">
-   <img src="https://github.com/ygkn/storybook-opener/assets/14973783/2cc56325-a572-42ff-9c30-78b2da0b3adb" />
-</video>
 
 ## Features
 
