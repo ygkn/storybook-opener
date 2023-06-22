@@ -8,7 +8,7 @@
 
 ## Features
 
-- Quickly open Storybook URL from your stories files (`*.stories.{t,j}sx`) and docs files (`*.mdx`) in your browser
+- Quickly open Storybook from your editing file
 - Support colocating files (you can open `SomeComponent` story from `SomeComponent.tsx` or `SomeComponent.module.css`)
 - Run the Storybook server when it is not started
 - Smartly follow your project settings
