@@ -1,9 +1,10 @@
-<h1 align="center">
-   <img src="./assets/icon.png" width="40" height="40" />
-   Storybook Opener
-</h1>
-
-A Visual Studio Code extension for effortless story opening
+<div align="center">
+   <h1>
+      <img src="./assets/icon.png" width="32" height="32" alt="" />
+      Storybook Opener
+   </h1>
+   <p>A Visual Studio Code extension for effortless story opening</p>
+</div>
 
 ## Features
 
