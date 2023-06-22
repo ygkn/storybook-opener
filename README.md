@@ -6,6 +6,10 @@
    <p>A Visual Studio Code extension for effortless storybook opening</p>
 </div>
 
+<video src="https://github.com/ygkn/storybook-opener/assets/14973783/4abd1316-2ef5-42df-ac03-3e2de4939b7b">
+   <img src="https://github.com/ygkn/storybook-opener/assets/14973783/2cc56325-a572-42ff-9c30-78b2da0b3adb" />
+</video>
+
 ## Features
 
 - Quickly open Storybook from your editing file
