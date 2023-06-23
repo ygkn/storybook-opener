@@ -5,7 +5,7 @@
   </h1>
   <p>A Visual Studio Code extension for effortless storybook opening</p>
   <video
-    src="https://github.com/ygkn/storybook-opener/assets/14973783/e0b45ad7-042a-45bd-8276-73eaf6998a6e"
+    src="https://github.com/ygkn/storybook-opener/assets/14973783/fe28989d-dd70-4b0c-9964-0ff6c8710dd1"
   >
     Demo video
 </div>
