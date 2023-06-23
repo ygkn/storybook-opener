@@ -5,17 +5,11 @@
   </h1>
   <p>A Visual Studio Code extension for effortless storybook opening</p>
   <video
-    src="https://github.com/ygkn/storybook-opener/assets/14973783/fa81be10-466e-40ee-a7b6-8c86ba97de05"
+    src="https://github.com/ygkn/storybook-opener/assets/14973783/e0b45ad7-042a-45bd-8276-73eaf6998a6e"
     width="1280"
     height="832"
   >
-    <img
-      src="https://github.com/ygkn/storybook-opener/assets/14973783/2cc56325-a572-42ff-9c30-78b2da0b3adb"
-      width="1280"
-      height="832"
-      alt="Demo video"
-    />
-  </video>
+    Demo video
 </div>
 
 ## Features
