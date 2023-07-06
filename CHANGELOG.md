@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.1.9
+
+- Fix starting Storybook with no-open option. Thanks [@hayato-osh](https://github.com/hayato-osh)
+
 # 1.1.8
 
 - Update README
