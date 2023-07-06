@@ -176,10 +176,19 @@ export async function activate(
             const config = vscode.workspace.getConfiguration(
               "storybook-opener.storybookOption"
             );
-            const port = config.get<number>("port");
+            const httpsOption = config.get<boolean>("https") ? "--https" : '';
+            const hostOption = config.get<string>("host") === 'localhost' ? '' : `--host ${config.get<string>("host")}`;
+            const portOption = `-p ${config.get<number>("port")}`;
             const startCommand = config.get<string>("startCommand");
 
-            const command = startCommand || `npx storybook dev -p ${port} --no-open`;
+            const options = [
+              httpsOption,
+              hostOption,
+              portOption,
+              '--no-open'
+            ].filter(Boolean).join(' ');
+
+            const command = startCommand || `npx storybook dev ${options}`;
 
             const newTerminal = vscode.window.createTerminal({
               name: "Run Storybook",
