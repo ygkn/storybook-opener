@@ -173,26 +173,13 @@ export async function activate(
               return;
             }
 
-            const exists = async (filename: string) => {
-              try {
-                await vscode.workspace.fs.stat(
-                  vscode.Uri.joinPath(workspaceUri, filename)
-                );
-                return true;
-              } catch {
-                return false;
-              }
-            };
+            const config = vscode.workspace.getConfiguration(
+              "storybook-opener.storybookOption"
+            );
+            const port = config.get<number>("port");
+            const startCommand = config.get<string>("startCommand");
 
-            const command =
-              vscode.workspace
-                .getConfiguration("storybook-opener.storybookOption")
-                .get("startCommand") ?? //
-              (await exists("pnpm-lock.yaml"))
-                ? "pnpm run storybook --no-open"
-                : (await exists("yarn.lock"))
-                ? "yarn storybook --no-open"
-                : "npm run storybook --no-open";
+            const command = startCommand || `npx storybook dev -p ${port} --no-open`;
 
             const newTerminal = vscode.window.createTerminal({
               name: "Run Storybook",
