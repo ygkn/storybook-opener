@@ -1,11 +1,12 @@
 import { join } from "path";
+
 import { requireFromWorkSpace } from "./requireFromWorkspace";
 import { Directories } from "./types/Directories";
 
 export async function loadPresets({ workingDir, configDir }: Directories) {
   const { loadMainConfig, loadAllPresets, resolveAddonName } =
     requireFromWorkSpace(
-      "@storybook/core-common"
+      "@storybook/core-common",
     ) as typeof import("@storybook/core-common");
   const { packageJson } = (await (
     requireFromWorkSpace("read-pkg-up") as typeof import("read-pkg-up")
@@ -77,7 +78,7 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
         "@storybook/core-server/dist/presets/babel-cache-preset",
         {
           paths: [configDir],
-        }
+        },
       ),
     ],
     // TODO

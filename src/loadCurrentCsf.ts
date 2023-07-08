@@ -4,14 +4,14 @@ export async function loadCurrentCsf(
   workingDir: string,
   absolutePath: string,
   entries: import("@storybook/types").NormalizedStoriesSpecifier[],
-  storyIndexers: import("@storybook/types").StoryIndexer[]
+  storyIndexers: import("@storybook/types").StoryIndexer[],
 ) {
   const { normalizeStoryPath } = requireFromWorkSpace(
-    "@storybook/core-common"
+    "@storybook/core-common",
   ) as typeof import("@storybook/core-common");
   const slash = requireFromWorkSpace("slash") as typeof import("slash");
   const { userOrAutoTitle } = requireFromWorkSpace(
-    "@storybook/preview-api"
+    "@storybook/preview-api",
   ) as typeof import("@storybook/preview-api");
   const path = requireFromWorkSpace("path") as typeof import("path");
 
@@ -32,7 +32,7 @@ export async function loadCurrentCsf(
   };
 
   const storyIndexer = storyIndexers.find((indexer) =>
-    indexer.test.exec(absolutePath)
+    indexer.test.exec(absolutePath),
   );
   if (!storyIndexer) {
     // throw new Error(`No matching story indexer found for ${absolutePath}`);

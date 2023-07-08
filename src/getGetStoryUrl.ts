@@ -1,7 +1,3 @@
-import { loadCurrentCsf } from "./loadCurrentCsf";
-import { loadPresets } from "./loadPresets";
-import { requireFromWorkSpace } from "./requireFromWorkspace";
-
 import type {
   ComponentTitle,
   DocsOptions,
@@ -12,6 +8,10 @@ import type {
   StorybookConfig,
   Tag,
 } from "@storybook/types";
+
+import { loadCurrentCsf } from "./loadCurrentCsf";
+import { loadPresets } from "./loadPresets";
+import { requireFromWorkSpace } from "./requireFromWorkspace";
 import { Directories } from "./types/Directories";
 
 /**
@@ -28,10 +28,10 @@ export const loadStoryUrlGetter = async (
     port: number;
     host: string;
     https: boolean;
-  }
+  },
 ) => {
   const { normalizeStories } = requireFromWorkSpace(
-    "@storybook/core-common"
+    "@storybook/core-common",
   ) as typeof import("@storybook/core-common");
 
   const presets = await loadPresets({ configDir, workingDir });
@@ -49,15 +49,15 @@ export const loadStoryUrlGetter = async (
   });
 
   const { toId } = requireFromWorkSpace(
-    "@storybook/csf"
+    "@storybook/csf",
   ) as typeof import("@storybook/csf");
 
   const { analyze } = requireFromWorkSpace(
-    "@storybook/docs-mdx"
+    "@storybook/docs-mdx",
   ) as typeof import("@storybook/docs-mdx");
 
   const { normalizeStoryPath } = requireFromWorkSpace(
-    "@storybook/core-common"
+    "@storybook/core-common",
   ) as typeof import("@storybook/core-common");
 
   const slash = requireFromWorkSpace("slash") as typeof import("slash");
@@ -65,11 +65,11 @@ export const loadStoryUrlGetter = async (
   const path = requireFromWorkSpace("path") as typeof import("path");
 
   const fs = requireFromWorkSpace(
-    "fs/promises"
+    "fs/promises",
   ) as typeof import("fs/promises");
 
   const { userOrAutoTitle } = requireFromWorkSpace(
-    "@storybook/preview-api"
+    "@storybook/preview-api",
   ) as typeof import("@storybook/preview-api");
 
   const glob = requireFromWorkSpace("globby") as typeof import("globby");
@@ -106,14 +106,14 @@ export const loadStoryUrlGetter = async (
     if (result.of) {
       const absoluteOf = path.resolve(
         workingDir,
-        normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of))
+        normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of)),
       );
 
       const ofDir = path.dirname(absoluteOf);
 
       const absoluteOfPath = (
         await glob(
-          normalizedStories.map(({ files }) => slash(path.join(ofDir, files)))
+          normalizedStories.map(({ files }) => slash(path.join(ofDir, files))),
         )
       ).find((path) => path.startsWith(absoluteOf));
 
@@ -122,7 +122,7 @@ export const loadStoryUrlGetter = async (
           workingDir,
           absoluteOfPath,
           normalizedStories,
-          storyIndexers
+          storyIndexers,
         );
       }
     }
@@ -141,7 +141,7 @@ export const loadStoryUrlGetter = async (
       workingDir,
       absolutePath,
       normalizedStories,
-      storyIndexers
+      storyIndexers,
     );
 
     const { autodocs } = docsOptions;
@@ -172,7 +172,7 @@ export const loadStoryUrlGetter = async (
 
     const absoluteStoryPath = (
       await glob(
-        normalizedStories.map(({ files }) => slash(path.join(dirname, files)))
+        normalizedStories.map(({ files }) => slash(path.join(dirname, files))),
       )
     ).find((path) => path.startsWith(absoluteFilename));
 

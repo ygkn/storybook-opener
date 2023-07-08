@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
-import { loadStoryUrlGetter } from "./getGetStoryUrl";
 import waitOn from "wait-on";
+
+import { loadStoryUrlGetter } from "./getGetStoryUrl";
 
 const fetch = (...args: Parameters<typeof import("node-fetch")["default"]>) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -11,7 +12,7 @@ const workspaceCache = new Map<string, WorkspaceCacheItem>();
 
 const getOrFallbackFromWorkspaceCache = async (
   key: string,
-  fallback: () => Promise<WorkspaceCacheItem | undefined>
+  fallback: () => Promise<WorkspaceCacheItem | undefined>,
 ): Promise<WorkspaceCacheItem | undefined> => {
   const cached = workspaceCache.get(key);
 
@@ -31,7 +32,7 @@ const getOrFallbackFromWorkspaceCache = async (
 };
 
 export async function activate(
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
 ): Promise<void> {
   const workspaceUri = vscode.workspace.workspaceFolders?.[0]?.uri;
 
@@ -57,18 +58,18 @@ export async function activate(
         storybookConfigWatcher?.dispose();
 
         const config = vscode.workspace.getConfiguration(
-          "storybook-opener.storybookOption"
+          "storybook-opener.storybookOption",
         );
 
         const configDirUri = vscode.Uri.joinPath(
           workspaceUri,
-          config.get<string>("configDir")!
+          config.get<string>("configDir")!,
         );
 
         const configDir = configDirUri.path;
 
         storybookConfigWatcher = vscode.workspace.createFileSystemWatcher(
-          vscode.Uri.joinPath(configDirUri, "**").path
+          vscode.Uri.joinPath(configDirUri, "**").path,
         );
 
         context.subscriptions.push(storybookConfigWatcher);
@@ -85,14 +86,14 @@ export async function activate(
             },
             () => {
               const config = vscode.workspace.getConfiguration(
-                "storybook-opener.storybookOption"
+                "storybook-opener.storybookOption",
               );
               return {
                 port: config.get<number>("port")!,
                 host: config.get<string>("host")!,
                 https: config.get<boolean>("https")!,
               };
-            }
+            },
           );
 
           console.log("storybook-opener: READY!!");
@@ -106,7 +107,7 @@ export async function activate(
             vscode.commands.executeCommand(
               "setContext",
               "storybook-opener.isActiveEditorCsf",
-              storyUrl !== null
+              storyUrl !== null,
             );
           };
         } catch (e) {
@@ -116,7 +117,7 @@ export async function activate(
 
           return;
         }
-      }
+      },
     );
 
     setActiveFileUrl?.(vscode.window.activeTextEditor);
@@ -143,7 +144,7 @@ export async function activate(
             `Check your config directory ${vscode.workspace
               .getConfiguration("storybook-opener.storybookOption")
               .get("configDir")!} is exists and valid.`,
-          ].join(" ")
+          ].join(" "),
         );
       }
 
@@ -152,7 +153,7 @@ export async function activate(
           [
             "Something went wrong when get or load yor story/docs file.",
             "Check opening file is valid or same name to story file.",
-          ].join(" ")
+          ].join(" "),
         );
         return;
       }
@@ -166,7 +167,7 @@ export async function activate(
           .showInformationMessage(
             "Storybook Server seems to have not been started yet. Would you like to start?",
             "Yes",
-            "No"
+            "No",
           )
           .then(async (answer) => {
             if (answer !== "Yes") {
@@ -174,19 +175,19 @@ export async function activate(
             }
 
             const config = vscode.workspace.getConfiguration(
-              "storybook-opener.storybookOption"
+              "storybook-opener.storybookOption",
             );
-            const httpsOption = config.get<boolean>("https") ? "--https" : '';
-            const hostOption = config.get<string>("host") === 'localhost' ? '' : `--host ${config.get<string>("host")}`;
+            const httpsOption = config.get<boolean>("https") ? "--https" : "";
+            const hostOption =
+              config.get<string>("host") === "localhost"
+                ? ""
+                : `--host ${config.get<string>("host")}`;
             const portOption = `-p ${config.get<number>("port")}`;
             const startCommand = config.get<string>("startCommand");
 
-            const options = [
-              httpsOption,
-              hostOption,
-              portOption,
-              '--no-open'
-            ].filter(Boolean).join(' ');
+            const options = [httpsOption, hostOption, portOption, "--no-open"]
+              .filter(Boolean)
+              .join(" ");
 
             const command = startCommand || `npx storybook dev ${options}`;
 
@@ -207,8 +208,10 @@ export async function activate(
       }
 
       vscode.env.openExternal(vscode.Uri.parse(storyUrl));
-    })
+    }),
   );
 }
 
-export function deactivate() {}
+export function deactivate() {
+  //
+}
