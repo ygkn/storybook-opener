@@ -1,15 +1,15 @@
 import { join } from "path";
 
-import { requireFromWorkSpace } from "./requireFromWorkspace";
 import { Directories } from "./types/Directories";
+import { requireFrom } from "./utils/requireFrom";
 
 export async function loadPresets({ workingDir, configDir }: Directories) {
-  const { loadMainConfig, loadAllPresets, resolveAddonName } =
-    requireFromWorkSpace(
-      "@storybook/core-common",
-    ) as typeof import("@storybook/core-common");
+  const { loadMainConfig, loadAllPresets, resolveAddonName } = requireFrom(
+    "@storybook/core-common",
+    workingDir
+  ) as typeof import("@storybook/core-common");
   const { packageJson } = (await (
-    requireFromWorkSpace("read-pkg-up") as typeof import("read-pkg-up")
+    requireFrom("read-pkg-up", workingDir) as typeof import("read-pkg-up")
   )({
     cwd: workingDir,
   }))!;
@@ -64,7 +64,7 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
     corePresets: [
       // NOTE: (extension author) set configDir as require.resolve paths
       require.resolve("@storybook/core-server/dist/presets/common-preset", {
-        paths: [configDir],
+        paths: [workingDir],
       }),
       // TODO
       // ...(managerBuilder.corePresets || []),
@@ -77,8 +77,8 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
       require.resolve(
         "@storybook/core-server/dist/presets/babel-cache-preset",
         {
-          paths: [configDir],
-        },
+          paths: [workingDir],
+        }
       ),
     ],
     // TODO
