@@ -1,2 +1,2 @@
 /** @public */
-export { loadStoryUrlGetter } from "./getGetStoryUrl";
+export { loadStoryUrlGetter } from "./loadStoryUrlGetter";
