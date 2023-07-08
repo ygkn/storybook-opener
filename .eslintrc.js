@@ -15,6 +15,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
+    project: "./tsconfig.json",
   },
   settings: {
     "import/resolver": {
@@ -22,7 +23,7 @@ module.exports = {
       node: true,
     },
   },
-  plugins: ["@typescript-eslint", "unused-imports"],
+  plugins: ["import-access", "@typescript-eslint", "unused-imports"],
   rules: {
     "@typescript-eslint/no-unused-vars": "off",
     "import/no-unresolved": "off",
@@ -50,6 +51,12 @@ module.exports = {
             position: "after",
           },
         ],
+      },
+    ],
+    "import-access/jsdoc": [
+      "error",
+      {
+        defaultImportability: "package",
       },
     ],
   },

@@ -6,7 +6,7 @@ import { requireFrom } from "@/utils/requireFrom";
 export async function loadPresets({ workingDir, configDir }: Directories) {
   const { loadMainConfig, loadAllPresets, resolveAddonName } = requireFrom(
     "@storybook/core-common",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/core-common");
   const { packageJson } = (await (
     requireFrom("read-pkg-up", workingDir) as typeof import("read-pkg-up")
@@ -78,7 +78,7 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
         "@storybook/core-server/dist/presets/babel-cache-preset",
         {
           paths: [workingDir],
-        }
+        },
       ),
     ],
     // TODO

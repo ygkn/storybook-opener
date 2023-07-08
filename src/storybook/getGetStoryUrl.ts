@@ -23,17 +23,18 @@ function isDocsMdx(absolutePath: string) {
   return /(?<!\.stories)\.mdx$/i.test(absolutePath);
 }
 
+/** @private */
 export const loadStoryUrlGetter = async (
   { configDir, workingDir }: Directories,
   getOption: () => {
     port: number;
     host: string;
     https: boolean;
-  }
+  },
 ) => {
   const { normalizeStories } = requireFrom(
     "@storybook/core-common",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/core-common");
 
   const presets = await loadPresets({ configDir, workingDir });
@@ -52,17 +53,17 @@ export const loadStoryUrlGetter = async (
 
   const { toId } = requireFrom(
     "@storybook/csf",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/csf");
 
   const { analyze } = requireFrom(
     "@storybook/docs-mdx",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/docs-mdx");
 
   const { normalizeStoryPath } = requireFrom(
     "@storybook/core-common",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/core-common");
 
   const slash = requireFrom("slash", workingDir) as typeof import("slash");
@@ -71,12 +72,12 @@ export const loadStoryUrlGetter = async (
 
   const fs = requireFrom(
     "fs/promises",
-    workingDir
+    workingDir,
   ) as typeof import("fs/promises");
 
   const { userOrAutoTitle } = requireFrom(
     "@storybook/preview-api",
-    workingDir
+    workingDir,
   ) as typeof import("@storybook/preview-api");
 
   const glob = requireFrom("globby", workingDir) as typeof import("globby");
@@ -113,14 +114,14 @@ export const loadStoryUrlGetter = async (
     if (result.of) {
       const absoluteOf = path.resolve(
         workingDir,
-        normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of))
+        normalizeStoryPath(path.join(path.dirname(normalizedPath), result.of)),
       );
 
       const ofDir = path.dirname(absoluteOf);
 
       const absoluteOfPath = (
         await glob(
-          normalizedStories.map(({ files }) => slash(path.join(ofDir, files)))
+          normalizedStories.map(({ files }) => slash(path.join(ofDir, files))),
         )
       ).find((path) => path.startsWith(absoluteOf));
 
@@ -129,7 +130,7 @@ export const loadStoryUrlGetter = async (
           workingDir,
           absoluteOfPath,
           normalizedStories,
-          storyIndexers
+          storyIndexers,
         );
       }
     }
@@ -148,7 +149,7 @@ export const loadStoryUrlGetter = async (
       workingDir,
       absolutePath,
       normalizedStories,
-      storyIndexers
+      storyIndexers,
     );
 
     const { autodocs } = docsOptions;
@@ -179,7 +180,7 @@ export const loadStoryUrlGetter = async (
 
     const absoluteStoryPath = (
       await glob(
-        normalizedStories.map(({ files }) => slash(path.join(dirname, files)))
+        normalizedStories.map(({ files }) => slash(path.join(dirname, files))),
       )
     ).find((path) => path.startsWith(absoluteFilename));
 

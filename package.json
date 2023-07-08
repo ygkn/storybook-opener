@@ -104,6 +104,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-import-access": "^1.1.2",
     "eslint-plugin-unused-imports": "^2.0.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",

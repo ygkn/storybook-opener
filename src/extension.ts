@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import waitOn from "wait-on";
 
-import { loadStoryUrlGetter } from "./getGetStoryUrl";
+import { loadStoryUrlGetter } from "@/storybook";
 
 const fetch = (...args: Parameters<typeof import("node-fetch")["default"]>) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
