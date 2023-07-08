@@ -1,7 +1,7 @@
 import { join } from "path";
 
-import { Directories } from "./types/Directories";
-import { requireFrom } from "./utils/requireFrom";
+import { Directories } from "@/types/Directories";
+import { requireFrom } from "@/utils/requireFrom";
 
 export async function loadPresets({ workingDir, configDir }: Directories) {
   const { loadMainConfig, loadAllPresets, resolveAddonName } = requireFrom(

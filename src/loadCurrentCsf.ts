@@ -1,4 +1,4 @@
-import { requireFrom } from "./utils/requireFrom";
+import { requireFrom } from "@/utils/requireFrom";
 
 export async function loadCurrentCsf(
   workingDir: string,

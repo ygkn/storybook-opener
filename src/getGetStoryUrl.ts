@@ -9,10 +9,11 @@ import type {
   Tag,
 } from "@storybook/types";
 
+import { Directories } from "@/types/Directories";
+import { requireFrom } from "@/utils/requireFrom";
+
 import { loadCurrentCsf } from "./loadCurrentCsf";
 import { loadPresets } from "./loadPresets";
-import { Directories } from "./types/Directories";
-import { requireFrom } from "./utils/requireFrom";
 
 /**
  * code from StoryIndexGenerator.prototype.isDocsMdx()

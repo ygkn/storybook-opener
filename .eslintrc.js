@@ -43,6 +43,13 @@ module.exports = {
           order: "asc",
         },
         "newlines-between": "always",
+        pathGroups: [
+          {
+            pattern: "@/**",
+            group: "external",
+            position: "after",
+          },
+        ],
       },
     ],
   },
