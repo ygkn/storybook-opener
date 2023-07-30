@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.1.10
+
+- fixes a bug that could not be executed on Windows ([#7](https://github.com/ygkn/storybook-opener/issues/7))
+
 # 1.1.9
 
 - Fix starting Storybook with no-open option. Thanks [@hayato-osh](https://github.com/hayato-osh)
