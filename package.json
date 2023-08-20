@@ -87,7 +87,10 @@
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "build": "npm run esbuild-base -- --sourcemap",
     "build:watch": "npm run esbuild-base -- --sourcemap --watch",
-    "lint": "eslint src --ext ts"
+    "lint:eslint": "eslint src --ext ts",
+    "lint:prettier": "prettier --check .",
+    "lint:ts": "tsc --noEmit",
+    "lint": "concurrently npm:lint:*"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.1",
@@ -99,6 +102,7 @@
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "@vscode/test-electron": "^2.3.2",
+    "concurrently": "^8.2.0",
     "esbuild": "^0.19.2",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
