@@ -1,10 +1,8 @@
 import * as vscode from "vscode";
-import waitOn from "wait-on";
 
 import { loadStoryUrlGetter } from "@/storybook";
 
-const fetch = (...args: Parameters<typeof import("node-fetch")["default"]>) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+import { isStorybookRunning, waitForStorybookRunning } from "./server-checking";
 
 type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
@@ -158,9 +156,7 @@ export async function activate(
         return;
       }
 
-      const storybookStarted = await fetch(storyUrl, {})
-        .then((response) => response.ok)
-        .catch(() => false);
+      const storybookStarted = await isStorybookRunning(storyUrl);
 
       if (!storybookStarted) {
         await vscode.window
@@ -198,11 +194,7 @@ export async function activate(
             newTerminal.sendText(command, true);
 
             if (storyUrl) {
-              await waitOn({
-                resources: [storyUrl],
-              });
-
-              await new Promise((res) => setTimeout(res, 1000));
+              await waitForStorybookRunning(storyUrl);
             }
           });
       }
