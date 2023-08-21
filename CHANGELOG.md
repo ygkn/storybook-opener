@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.1.11
+
+- fix storybook URL ([#9](https://github.com/ygkn/storybook-opener/issues/9))
+
 # 1.1.10
 
 - fixes a bug that could not be executed on Windows ([#7](https://github.com/ygkn/storybook-opener/issues/7))
