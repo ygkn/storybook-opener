@@ -165,8 +165,8 @@ export const loadStoryUrlGetter = async (
       `/${
         componentTags.includes("stories-mdx") || autodocsOptedIn
           ? "docs"
-          : "stories"
-      }/${toId(csf.meta.title)}`
+          : "story"
+      }/${csf.stories[0]!.id}`
     );
   };
 
