@@ -36,7 +36,8 @@ export async function loadCurrentCsf(
   const storyIndexer = storyIndexers.find((indexer) =>
     indexer.test.exec(absolutePath),
   );
-  if (!storyIndexer) {
+  if (!storyIndexer || !storyIndexer.indexer) {
+    // TODO: (extension author) support new indexer API
     // throw new Error(`No matching story indexer found for ${absolutePath}`);
 
     return undefined;
