@@ -22,8 +22,6 @@ import { loadPresets } from "./loadPresets";
 function isDocsMdx(absolutePath: string) {
   return /(?<!\.stories)\.mdx$/i.test(absolutePath);
 }
-
-/** @private */
 export const loadStoryUrlGetter = async (
   { configDir, workingDir }: Directories,
   getOption: () => {
