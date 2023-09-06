@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { loadStoryUrlGetter } from "@/storybook";
 
-import { isStorybookRunning, waitForStorybookRunning } from "./server-checking";
+import { isRunning, waitForRunning } from "./server-checking";
 
 type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
@@ -156,7 +156,7 @@ export async function activate(
         return;
       }
 
-      const storybookStarted = await isStorybookRunning(storyUrl);
+      const storybookStarted = await isRunning(storyUrl);
 
       if (!storybookStarted) {
         await vscode.window
@@ -194,7 +194,7 @@ export async function activate(
             newTerminal.sendText(command, true);
 
             if (storyUrl) {
-              await waitForStorybookRunning(storyUrl);
+              await waitForRunning(storyUrl);
             }
           });
       }

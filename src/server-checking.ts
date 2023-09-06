@@ -3,7 +3,7 @@ import https from "https";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export const isStorybookRunning = async (
+export const isRunning = async (
   url: string,
   httpRequestOptions: http.RequestOptions = {},
 ): Promise<boolean> => {
@@ -19,8 +19,8 @@ export const isStorybookRunning = async (
   });
 };
 
-export const waitForStorybookRunning = async (url: string): Promise<void> => {
-  while (!(await isStorybookRunning(url))) {
+export const waitForRunning = async (url: string): Promise<void> => {
+  while (!(await isRunning(url))) {
     await delay(1000);
   }
 };
