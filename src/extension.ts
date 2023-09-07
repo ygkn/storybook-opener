@@ -8,151 +8,189 @@ type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
 const workspaceCache = new Map<string, WorkspaceCacheItem>();
 
-const getOrFallbackFromWorkspaceCache = async (
-  key: string,
-  fallback: () => Promise<WorkspaceCacheItem | undefined>,
-): Promise<WorkspaceCacheItem | undefined> => {
-  const cached = workspaceCache.get(key);
-
-  if (cached !== undefined) {
-    return cached;
-  }
-
-  const fallbackResult = await fallback();
-
-  if (!fallbackResult) {
-    return;
-  }
-
-  workspaceCache.set(key, fallbackResult);
-
-  return fallbackResult;
-};
+const storybookConfigWatchers = new Map<string, vscode.FileSystemWatcher>();
 
 export async function activate(
   context: vscode.ExtensionContext,
 ): Promise<void> {
-  const workspaceUri = vscode.workspace.workspaceFolders?.[0]?.uri;
-
-  if (!workspaceUri) {
-    await vscode.window.showErrorMessage("please open a folder as workspace");
+  if (
+    vscode.workspace.workspaceFolders === undefined ||
+    vscode.workspace.workspaceFolders.length == 0
+  ) {
     return;
   }
 
-  const workingDir = workspaceUri.fsPath;
-
   let storyUrl: string | null = null;
+  let activeEditor: vscode.TextEditor | null = null;
 
-  let storybookConfigWatcher: vscode.FileSystemWatcher | undefined;
+  const loadWorkspace = async ({
+    noCache = false,
+    workspaceFolder,
+  }: {
+    noCache?: boolean;
+    workspaceFolder: vscode.WorkspaceFolder;
+  }) => {
+    const workingDir = workspaceFolder.uri.fsPath;
 
-  const reload = async ({ noCache }: { noCache?: boolean } = {}) => {
     if (noCache) {
       workspaceCache.delete(workingDir);
     }
 
-    const setActiveFileUrl = await getOrFallbackFromWorkspaceCache(
-      workingDir,
-      async () => {
-        storybookConfigWatcher?.dispose();
+    storybookConfigWatchers.get(workingDir)?.dispose();
 
-        const config = vscode.workspace.getConfiguration(
-          "storybook-opener.storybookOption",
-        );
-
-        const configDirUri = vscode.Uri.joinPath(
-          workspaceUri,
-          config.get<string>("configDir")!,
-        );
-
-        const configDir = configDirUri.fsPath;
-
-        storybookConfigWatcher = vscode.workspace.createFileSystemWatcher(
-          vscode.Uri.joinPath(configDirUri, "**").fsPath,
-        );
-
-        context.subscriptions.push(storybookConfigWatcher);
-
-        storybookConfigWatcher.onDidCreate(() => reload({ noCache: true }));
-        storybookConfigWatcher.onDidChange(() => reload({ noCache: true }));
-        storybookConfigWatcher.onDidDelete(() => reload({ noCache: true }));
-
-        try {
-          const getStoryUrlFromPath = await loadStoryUrlGetter(
-            {
-              configDir,
-              workingDir,
-            },
-            () => {
-              const config = vscode.workspace.getConfiguration(
-                "storybook-opener.storybookOption",
-              );
-              return {
-                port: config.get<number>("port")!,
-                host: config.get<string>("host")!,
-                https: config.get<boolean>("https")!,
-              };
-            },
-          );
-
-          console.log("storybook-opener: READY!!");
-
-          return async (editor) => {
-            storyUrl =
-              (editor &&
-                (await getStoryUrlFromPath(editor.document.uri.fsPath))) ??
-              null;
-
-            vscode.commands.executeCommand(
-              "setContext",
-              "storybook-opener.isActiveEditorCsf",
-              storyUrl !== null,
-            );
-          };
-        } catch (e) {
-          // TODO: error handling when storybook config file not found
-
-          console.log(e);
-
-          return;
-        }
-      },
+    const config = vscode.workspace.getConfiguration(
+      "storybook-opener.storybookOption",
+      workspaceFolder,
     );
 
-    setActiveFileUrl?.(vscode.window.activeTextEditor);
+    const configDirConfig = config.get<string>("configDir")!;
+
+    const configDir = vscode.Uri.joinPath(
+      workspaceFolder.uri,
+      configDirConfig,
+    ).fsPath;
+
+    const storybookConfigWatcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(workspaceFolder, configDirConfig),
+    );
+
+    storybookConfigWatcher.onDidCreate(() =>
+      loadWorkspace({ noCache: true, workspaceFolder }),
+    );
+    storybookConfigWatcher.onDidChange(() =>
+      loadWorkspace({ noCache: true, workspaceFolder }),
+    );
+    storybookConfigWatcher.onDidDelete(() =>
+      loadWorkspace({ noCache: true, workspaceFolder }),
+    );
+
+    try {
+      const getStoryUrlFromPath = await loadStoryUrlGetter(
+        {
+          configDir,
+          workingDir,
+        },
+        () => {
+          const config = vscode.workspace.getConfiguration(
+            "storybook-opener.storybookOption",
+            workspaceFolder,
+          );
+          return {
+            port: config.get<number>("port")!,
+            host: config.get<string>("host")!,
+            https: config.get<boolean>("https")!,
+          };
+        },
+      );
+
+      workspaceCache.set(workingDir, async (editor) => {
+        if (editor === undefined) {
+          return;
+        }
+
+        storyUrl =
+          (await getStoryUrlFromPath(editor.document.uri.fsPath)) ?? null;
+
+        activeEditor = storyUrl !== null ? editor : null;
+
+        vscode.commands.executeCommand(
+          "setContext",
+          "storybook-opener.isActiveEditorCsf",
+          storyUrl !== null,
+        );
+      });
+    } catch (e) {
+      // TODO: error handling when storybook config file not found
+
+      console.log(e);
+
+      return;
+    }
   };
 
-  reload();
+  Promise.all(
+    vscode.workspace.workspaceFolders.map((workspaceFolder) =>
+      loadWorkspace({ workspaceFolder }),
+    ),
+  ).then(() => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+      return;
+    }
+
+    const workspace = vscode.workspace.getWorkspaceFolder(editor.document.uri);
+
+    if (workspace === undefined) {
+      return;
+    }
+
+    workspaceCache.get(workspace.uri.fsPath)?.(editor);
+  });
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (
-        event.affectsConfiguration("storybook-opener.storybookOption.configDir")
-      ) {
-        reload({ noCache: true });
+      if (vscode.workspace.workspaceFolders === undefined) {
+        return;
+      }
+
+      for (const workspaceFolder of vscode.workspace.workspaceFolders) {
+        if (
+          event.affectsConfiguration(
+            "storybook-opener.storybookOption.configDir",
+            workspaceFolder,
+          )
+        ) {
+          loadWorkspace({ noCache: true, workspaceFolder });
+        }
       }
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
-      workspaceCache.get(workingDir)?.(editor);
-    }),
-    vscode.commands.registerCommand("storybook-opener.open", async () => {
-      if (workspaceCache.get(workingDir) === undefined) {
-        await vscode.window.showErrorMessage(
-          [
-            "Something wrong when loading main config.",
-            `Check your config directory ${vscode.workspace
-              .getConfiguration("storybook-opener.storybookOption")
-              .get("configDir")!} is exists and valid.`,
-          ].join(" "),
-        );
+      if (editor === undefined) {
+        return;
       }
 
+      const workspace = vscode.workspace.getWorkspaceFolder(
+        editor.document.uri,
+      );
+
+      if (workspace === undefined) {
+        return;
+      }
+
+      workspaceCache.get(workspace.uri.fsPath)?.(editor);
+    }),
+    vscode.commands.registerCommand("storybook-opener.open", async () => {
       if (storyUrl === null) {
+        if (vscode.window.activeTextEditor === undefined) {
+          await vscode.window.showInformationMessage(
+            "Please focus stories/docs file.s",
+          );
+          return;
+        }
+
+        const workspace = vscode.workspace.getWorkspaceFolder(
+          vscode.window.activeTextEditor.document.uri,
+        );
+
+        if (workspace === undefined) {
+          await vscode.window.showInformationMessage("Please open workspace.");
+          return;
+        }
+
+        if (workspaceCache.get(workspace.uri.fsPath) === undefined) {
+          await vscode.window.showInformationMessage(
+            "Something went wrong when Storybook config.",
+          );
+          return;
+        }
+
         await vscode.window.showInformationMessage(
           [
             "Something went wrong when get or load yor story/docs file.",
             "Check opening file is valid or same name to story file.",
           ].join(" "),
         );
+
         return;
       }
 
@@ -172,6 +210,8 @@ export async function activate(
 
             const config = vscode.workspace.getConfiguration(
               "storybook-opener.storybookOption",
+              activeEditor &&
+                vscode.workspace.getWorkspaceFolder(activeEditor.document.uri),
             );
             const httpsOption = config.get<boolean>("https") ? "--https" : "";
             const hostOption =
@@ -201,6 +241,13 @@ export async function activate(
 
       vscode.env.openExternal(vscode.Uri.parse(storyUrl));
     }),
+    {
+      dispose() {
+        for (const [_, watcher] of storybookConfigWatchers) {
+          watcher.dispose();
+        }
+      },
+    },
   );
 }
 

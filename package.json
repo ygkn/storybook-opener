@@ -57,27 +57,32 @@
       "properties": {
         "storybook-opener.storybookOption.startCommand": {
           "type": "string",
-          "description": "Command to run when starting a Storybook. By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it."
+          "description": "Command to run when starting a Storybook. By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it.",
+          "scope": "resource"
         },
         "storybook-opener.storybookOption.configDir": {
           "type": "string",
           "default": ".storybook",
-          "markdownDescription": "Directory where to load Storybook configurations from\n\nSame to `-c` / `--config-dir` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)"
+          "markdownDescription": "Directory where to load Storybook configurations from\n\nSame to `-c` / `--config-dir` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
+          "scope": "resource"
         },
         "storybook-opener.storybookOption.port": {
           "type": "number",
           "markdownDescription": "Port to run Storybook\n\nSame to `-p` / `--port` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
-          "default": 6006
+          "default": 6006,
+          "scope": "resource"
         },
         "storybook-opener.storybookOption.host": {
           "type": "string",
           "markdownDescription": "Host to run Storybook\n\nSame to `-h` / `--host` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
-          "default": "localhost"
+          "default": "localhost",
+          "scope": "resource"
         },
         "storybook-opener.storybookOption.https": {
           "type": "boolean",
           "markdownDescription": "Serve Storybook over HTTPS\n\nSame to `--https` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
-          "default": false
+          "default": false,
+          "scope": "resource"
         }
       }
     }
