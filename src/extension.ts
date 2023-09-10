@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 
-import { loadStoryUrlGetter } from "@/storybook";
-
 import { isRunning, waitForRunning } from "./server-checking";
+import { StorybookProject } from "./storybook";
 
 type WorkspaceCacheItem = (editor: vscode.TextEditor | undefined) => unknown;
 
@@ -65,7 +64,7 @@ export async function activate(
     );
 
     try {
-      const getStoryUrlFromPath = await loadStoryUrlGetter(
+      const storybookProject = await StorybookProject.load(
         {
           configDir,
           workingDir,
@@ -89,7 +88,9 @@ export async function activate(
         }
 
         storyUrl =
-          (await getStoryUrlFromPath(editor.document.uri.fsPath)) ?? null;
+          (await storybookProject.getStorybookUrl(
+            editor.document.uri.fsPath,
+          )) ?? null;
 
         activeEditor = storyUrl !== null ? editor : null;
 

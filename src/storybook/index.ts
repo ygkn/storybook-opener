@@ -1,2 +1,1 @@
-/** @public */
-export { loadStoryUrlGetter } from "./loadStoryUrlGetter";
+export { StorybookProject } from "./StorybookProject";
