@@ -1,5 +1,3 @@
-import { pathToFileURL } from "node:url";
-
 import type { Builder, CoreConfig, Options } from "@storybook/types";
 import invariant from "tiny-invariant";
 
@@ -7,7 +5,7 @@ async function getManagerBuilder(configDir: string): Promise<Builder<unknown>> {
   const builderPackage = require.resolve("@storybook/builder-manager", {
     paths: [configDir],
   });
-  const previewBuilder = await import(pathToFileURL(builderPackage).href);
+  const previewBuilder = require(builderPackage);
   return previewBuilder;
 }
 
@@ -21,7 +19,7 @@ async function getPreviewBuilder(
       : builderName,
     { paths: [configDir] },
   );
-  const previewBuilder = await import(pathToFileURL(builderPackage).href);
+  const previewBuilder = require(builderPackage);
   return previewBuilder;
 }
 

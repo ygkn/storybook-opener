@@ -25,6 +25,7 @@ module.exports = {
   },
   plugins: ["import-access", "@typescript-eslint", "unused-imports"],
   rules: {
+    "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "import/no-unresolved": "off",
     "unused-imports/no-unused-imports": "error",
