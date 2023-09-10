@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.2.2
+
+- fix a bug not working
+
 # 1.2.1
 
 - fix opening wrong url
