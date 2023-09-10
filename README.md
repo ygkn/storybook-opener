@@ -3,19 +3,23 @@
     <img src="./assets/icon.png" width="32" height="32" alt="" />
     Storybook Opener
   </h1>
-  <p>A Visual Studio Code extension for effortless storybook opening</p>
+  <p>A Visual Studio Code extension to open Storybook quickly</p>
   <video
     src="https://github.com/ygkn/storybook-opener/assets/14973783/fe28989d-dd70-4b0c-9964-0ff6c8710dd1"
   >
-    Demo video
+    <img
+      src="https://github.com/ygkn/storybook-opener/assets/14973783/09c2eb33-7922-4b43-9337-a9a96e465334"
+      alt="demo video"
+    />
+  </video>
 </div>
 
 ## Features
 
-- Quickly open Storybook from your editing file
-- Support colocating files (you can open `SomeComponent` story from `SomeComponent.tsx` or `SomeComponent.module.css`)
-- Run the Storybook server when it is not started
-- Smartly follow your project settings
+- **Efficiency**: Open Storybook directly from your active file.
+- **Colocation Support**: Instantly open `SomeComponent` story from associated files like `SomeComponent.tsx` or `SomeComponent.module.css`.
+- **Auto Server Start**: If your Storybook server isn't running, it'll initiate it for you.
+- **Adaptable**: Seamlessly syncs with your project settings.
 
 ## Usage
 
