@@ -4,6 +4,20 @@
     Storybook Opener
   </h1>
   <p>A Visual Studio Code extension to open Storybook quickly</p>
+  <p>
+    <img
+      alt="Visual Studio Marketplace Version"
+      src="https://img.shields.io/visual-studio-marketplace/v/ygkn.storybook-opener?style=flat-square&logo=visualstudiocode"
+    />
+    <img
+      alt="Visual Studio Marketplace Installs"
+      src="https://img.shields.io/visual-studio-marketplace/i/ygkn.storybook-opener?style=flat-square&logo=visualstudiocode"
+    />
+    <img
+      alt="Visual Studio Marketplace Last Updated"
+      src="https://img.shields.io/visual-studio-marketplace/last-updated/ygkn.storybook-opener?style=flat-square&logo=visualstudiocode"
+    />
+  </p>
   <video
     src="https://github.com/ygkn/storybook-opener/assets/14973783/fe28989d-dd70-4b0c-9964-0ff6c8710dd1"
   >
