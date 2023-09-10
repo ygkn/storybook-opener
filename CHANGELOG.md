@@ -1,5 +1,10 @@
 # Change Log
 
+# 1.2.0
+
+- Suport multi-root workspace
+- Support [new indexer API](https://github.com/storybookjs/storybook/discussions/23176)
+
 # 1.1.11
 
 - fix storybook URL ([#9](https://github.com/ygkn/storybook-opener/issues/9))
