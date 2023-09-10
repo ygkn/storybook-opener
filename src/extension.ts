@@ -22,6 +22,16 @@ export async function activate(
   let storyUrl: string | null = null;
   let activeEditor: vscode.TextEditor | null = null;
 
+  const setActiveEditorNoStory = () => {
+    activeEditor = null;
+    activeEditor = null;
+    vscode.commands.executeCommand(
+      "setContext",
+      "storybook-opener.isActiveEditorCsf",
+      false,
+    );
+  };
+
   const loadWorkspace = async ({
     noCache = false,
     workspaceFolder,
@@ -84,6 +94,7 @@ export async function activate(
 
       workspaceCache.set(workingDir, async (editor) => {
         if (editor === undefined) {
+          setActiveEditorNoStory();
           return;
         }
 
@@ -92,12 +103,17 @@ export async function activate(
             editor.document.uri.fsPath,
           )) ?? null;
 
-        activeEditor = storyUrl !== null ? editor : null;
+        if (storyUrl === null) {
+          setActiveEditorNoStory();
+          return;
+        }
+
+        activeEditor = editor;
 
         vscode.commands.executeCommand(
           "setContext",
           "storybook-opener.isActiveEditorCsf",
-          storyUrl !== null,
+          true,
         );
       });
     } catch (e) {
@@ -116,12 +132,14 @@ export async function activate(
   ).then(() => {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
+      setActiveEditorNoStory();
       return;
     }
 
     const workspace = vscode.workspace.getWorkspaceFolder(editor.document.uri);
 
     if (workspace === undefined) {
+      setActiveEditorNoStory();
       return;
     }
 
