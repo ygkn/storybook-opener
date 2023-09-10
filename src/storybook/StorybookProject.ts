@@ -107,7 +107,7 @@ export class StorybookProject {
 
     const protocol = https ? "https" : "http";
 
-    return `${protocol}://${host}:${port}/${path}`;
+    return `${protocol}://${host}:${port}?path=${path}`;
   }
 
   private async getStoryPath(
