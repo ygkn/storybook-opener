@@ -1,5 +1,10 @@
 # Change Log
 
+# 1.2.1
+
+- fix opening wrong url
+- fix icon not hidden when open not file
+
 # 1.2.0
 
 - Suport multi-root workspace
