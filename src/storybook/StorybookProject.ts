@@ -192,7 +192,7 @@ export class StorybookProject {
 
       return `/docs/${id}`;
     } else {
-      return `/story/${id}`;
+      return `/${input.type}/${id}`;
     }
   }
   private async getStoryPathFromDeprecatedIndexer({
