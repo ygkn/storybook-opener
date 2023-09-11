@@ -1,5 +1,13 @@
 # Change Log
 
+# 1.2.5
+
+- docs: enhance README
+
+# 1.2.4
+
+- fix icon not hidden when open not file
+
 # 1.2.3
 
 - fix opening URL
