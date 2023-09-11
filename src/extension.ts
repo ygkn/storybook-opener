@@ -165,6 +165,7 @@ export async function activate(
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor === undefined) {
+        setActiveEditorNoStory();
         return;
       }
 
@@ -173,6 +174,7 @@ export async function activate(
       );
 
       if (workspace === undefined) {
+        setActiveEditorNoStory();
         return;
       }
 
