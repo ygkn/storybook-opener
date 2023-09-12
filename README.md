@@ -155,19 +155,6 @@ Furthermore, using different port numbers for each package allows efficient chec
 }
 ```
 
-**Pro Tip**: You can set `"files.exclude"` in `.vscode/settings.json` of root workspace to hide other packages from the explorer.
-
-**`.vscode/settings.json`**
-
-```json
-{
-  "files.exclude": {
-    "packages/": true,
-    "apps/": true
-  }
-}
-```
-
 #### Setting `storybook-opener.storybookOption.configDir` and `storybook-opener.storybookOption.startCommand` options
 
 If you have just one package using Storybook and you don't want to use multi-root workspaces, you can use Storybook Opener by configuring the `storybook-opener.storybookOption.configDir` and `storybook-opener.storybookOption.startCommand` options.
