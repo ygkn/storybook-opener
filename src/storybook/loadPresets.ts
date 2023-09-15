@@ -7,6 +7,16 @@ import { requireFrom } from "@/utils/requireFrom";
 
 import { getBuilders } from "./get-builders";
 
+const safeRequireResolve = (
+  ...args: Parameters<typeof require.resolve>
+): ReturnType<typeof require.resolve> | null => {
+  try {
+    return require.resolve(...args);
+  } catch {
+    return null;
+  }
+};
+
 export async function loadPresets({ workingDir, configDir }: Directories) {
   const { loadMainConfig, loadAllPresets, resolveAddonName } = requireFrom(
     "@storybook/core-common",
@@ -46,20 +56,20 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
 
   let presets = await loadAllPresets({
     corePresets: [
-      // NOTE: (extension author) set configDir as require.resolve paths
-      require.resolve("@storybook/core-server/dist/presets/common-preset", {
-        paths: [configDir],
-      }),
+      ...[
+        safeRequireResolve(
+          "@storybook/core-server/dist/presets/common-preset",
+          { paths: [configDir] },
+        ),
+      ].filter((x): x is Exclude<typeof x, null> => x !== null),
       ...corePresets,
     ],
     overridePresets: [
-      require.resolve(
+      safeRequireResolve(
         "@storybook/core-server/dist/presets/common-override-preset",
-        {
-          paths: [configDir],
-        },
+        { paths: [configDir] },
       ),
-    ],
+    ].filter((x): x is Exclude<typeof x, null> => x !== null),
     ...options,
   });
 
@@ -71,32 +81,33 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
 
   presets = await loadAllPresets({
     corePresets: [
-      // NOTE: (extension author) set workingDir as require.resolve paths
-      require.resolve("@storybook/core-server/dist/presets/common-preset", {
-        paths: [workingDir],
-      }),
+      ...[
+        safeRequireResolve(
+          "@storybook/core-server/dist/presets/common-preset",
+          { paths: [configDir] },
+        ),
+      ].filter((x): x is Exclude<typeof x, null> => x !== null),
       ...(managerBuilder.corePresets || []),
       ...(previewBuilder.corePresets || []),
       ...(renderer
         ? [resolveAddonName(options.configDir, renderer, options)!]
         : []),
       ...corePresets,
-      // NOTE: (extension author) set workingDir as require.resolve paths
-      require.resolve(
-        "@storybook/core-server/dist/presets/babel-cache-preset",
-        {
-          paths: [workingDir],
-        },
-      ),
+      ...[
+        safeRequireResolve(
+          "@storybook/core-server/dist/presets/babel-cache-preset",
+          { paths: [configDir] },
+        ),
+      ].filter((x): x is Exclude<typeof x, null> => x !== null),
     ],
     overridePresets: [
       ...(previewBuilder.overridePresets || []),
-      require.resolve(
-        "@storybook/core-server/dist/presets/common-override-preset",
-        {
-          paths: [configDir],
-        },
-      ),
+      ...[
+        safeRequireResolve(
+          "@storybook/core-server/dist/presets/common-override-preset",
+          { paths: [configDir] },
+        ),
+      ].filter((x): x is Exclude<typeof x, null> => x !== null),
     ],
     ...options,
   });
