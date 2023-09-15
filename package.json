@@ -3,7 +3,7 @@
   "displayName": "Storybook Opener",
   "icon": "./assets/icon.png",
   "description": "Open Storybook quickly",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "publisher": "ygkn",
   "engines": {
     "vscode": "^1.60.0"
