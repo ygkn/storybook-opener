@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.2.7
+
+- fix: fix a bug that could not work with under Storybook v7.3.0
+
 # 1.2.5
 
 - docs: enhance README
