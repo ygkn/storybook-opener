@@ -94,10 +94,7 @@ export class StorybookProject {
     absolutePath: string,
   ): Promise<Promise<Promise<string | undefined>>> {
     const path =
-      (isDocsMdx(absolutePath)
-        ? await this.getDocPath(absolutePath)
-        : await this.getStoryPath(absolutePath)) ||
-      (await this.getColocatedStoryPath(absolutePath));
+      await this.getStorybookUrlSearchParamPath(absolutePath);
 
     if (!path) {
       return undefined;
@@ -108,6 +105,28 @@ export class StorybookProject {
     const protocol = https ? "https" : "http";
 
     return `${protocol}://${host}:${port}?path=${path}`;
+  }
+
+  private async getStorybookUrlSearchParamPath(
+    absolutePath: string,
+  ) {
+    const mayBePath =
+      (isDocsMdx(absolutePath)
+        ? await this.getDocPath(absolutePath)
+        : await this.getStoryPath(absolutePath)) ||
+      (await this.getColocatedStoryPath(absolutePath));
+    if (mayBePath) return mayBePath;
+
+    // If "index.*" is the target, re-search the path based on the directory path.
+    const parsed = path.parse(absolutePath);
+    if (parsed.name !== 'index') return;
+    const absolutePathDir = parsed.dir;
+    return (
+      (isDocsMdx(absolutePathDir)
+        ? await this.getDocPath(absolutePathDir)
+        : await this.getStoryPath(absolutePathDir)) ||
+      (await this.getColocatedStoryPath(absolutePathDir))
+    );
   }
 
   private async getStoryPath(
