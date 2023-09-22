@@ -217,6 +217,21 @@ Command to run when starting a Storybook.
 
 By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it.
 
+#### `storybook-opener.openInEditor.enable`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+When enabled, Open storybook with vscode SimpleBrowser.
+
+#### `storybook-opener.openInEditor.follow`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+When enabled, Automatically opens stories related to the opened file.  
+`storybook-opener.openInEditor.enable` MUST be set to `true`.
+
 ## Contributing
 
 Contributions, issues and feature requests are welcome!
