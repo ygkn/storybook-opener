@@ -83,6 +83,18 @@
           "markdownDescription": "Serve Storybook over HTTPS\n\nSame to `--https` option of [Storybook CLI Options](https://storybook.js.org/docs/react/api/cli-options)",
           "default": false,
           "scope": "resource"
+        },
+        "storybook-opener.openInEditor.enable": {
+          "type": "boolean",
+          "description": "When enabled, Open storybook with vscode SimpleBrowser.",
+          "default": false,
+          "scope": "resource"
+        },
+        "storybook-opener.openInEditor.follow": {
+          "type": "boolean",
+          "markdownDescription": "When enabled, Automatically opens stories related to the opened file.\n\n`storybook-opener.openInEditor.enable` **MUST** be set to `true`.",
+          "default": false,
+          "scope": "resource"
         }
       }
     }

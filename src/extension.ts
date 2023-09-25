@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 
+import { followStory, getOpenerConfig, openStory } from "./opener";
 import { isRunning, waitForRunning } from "./server-checking";
 import { StorybookProject } from "./storybook";
 
@@ -115,6 +116,11 @@ export async function activate(
           "storybook-opener.isActiveEditorCsf",
           true,
         );
+
+        const openerConfig = getOpenerConfig(activeEditor);
+        if (openerConfig.execFollow) {
+          followStory(storyUrl);
+        }
       });
     } catch (e) {
       // TODO: error handling when storybook config file not found
@@ -260,7 +266,8 @@ export async function activate(
           });
       }
 
-      vscode.env.openExternal(vscode.Uri.parse(storyUrl));
+      const openerConfig = getOpenerConfig(activeEditor);
+      openStory(storyUrl, openerConfig);
     }),
     {
       dispose() {
