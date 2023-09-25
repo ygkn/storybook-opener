@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 
 type OpenerConfig = {
-  openInEditor: boolean
-  execFollow: boolean
-}
+  openInEditor: boolean;
+  execFollow: boolean;
+};
 export const getOpenerConfig = (
-  activeEditor: vscode.TextEditor | null
+  activeEditor: vscode.TextEditor | null,
 ): OpenerConfig => {
   const openInEditor = vscode.workspace.getConfiguration(
     "storybook-opener.openInEditor",
@@ -17,16 +17,16 @@ export const getOpenerConfig = (
   return {
     openInEditor: enable,
     execFollow: enable && follow,
-  }
-}
+  };
+};
 
 export const openStory = (
   storyUrl: string,
   {
-    openInEditor
+    openInEditor,
   }: {
-    openInEditor: boolean
-  }
+    openInEditor: boolean;
+  },
 ) => {
   if (openInEditor) {
     vscode.commands.executeCommand("simpleBrowser.api.open", storyUrl, {
@@ -36,11 +36,11 @@ export const openStory = (
   } else {
     vscode.env.openExternal(vscode.Uri.parse(storyUrl));
   }
-}
+};
 
 export const followStory = (storyUrl: string) => {
   vscode.commands.executeCommand("simpleBrowser.api.open", storyUrl, {
     preserveFocus: true,
     viewColumn: vscode.ViewColumn.Two,
   });
-}
+};
