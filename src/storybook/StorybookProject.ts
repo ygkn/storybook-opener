@@ -93,8 +93,7 @@ export class StorybookProject {
   async getStorybookUrl(
     absolutePath: string,
   ): Promise<Promise<Promise<string | undefined>>> {
-    const path =
-      await this.getStorybookUrlSearchParamPath(absolutePath);
+    const path = await this.getStorybookUrlSearchParamPath(absolutePath);
 
     if (!path) {
       return undefined;
@@ -109,7 +108,7 @@ export class StorybookProject {
 
   private async getStorybookUrlSearchParamPath(
     absolutePath: string,
-  ) {
+  ): Promise<string | undefined> {
     const mayBePath =
       (isDocsMdx(absolutePath)
         ? await this.getDocPath(absolutePath)
@@ -119,7 +118,7 @@ export class StorybookProject {
 
     // If "index.*" is the target, re-search the path based on the directory path.
     const parsed = path.parse(absolutePath);
-    if (parsed.name !== 'index') return;
+    if (parsed.name !== "index") return;
     const absolutePathDir = parsed.dir;
     return (
       (isDocsMdx(absolutePathDir)
