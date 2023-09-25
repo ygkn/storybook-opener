@@ -3,9 +3,12 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2020",
-    "outDir": "out",
     "lib": ["ES2020"],
-    "sourceMap": true,
+
+    // build
+    "noEmit": true,
+
+    // alias
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
@@ -16,5 +19,6 @@
         "name": "eslint-plugin-import-access"
       }
     ]
-  }
+  },
+  "include": ["src"]
 }
