@@ -1,5 +1,10 @@
 # Change Log
 
+# 1.3.0
+
+- feat: support `openInEditor` options. It allows you to open storybook in vscode SimpleBrowser and automatically follow the opening file. Thanks [@nnnnusui](https://github.com/nnnnusui)
+- feat: support openping `{Component}` story via `{Component}/index.*` file to enhance the experience of colocating stories. Thanks [@nnnnusui](https://github.com/nnnnusui)
+
 # 1.2.7
 
 - fix: fix a bug that could not work with under Storybook v7.3.0
