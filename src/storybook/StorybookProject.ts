@@ -322,7 +322,11 @@ export class StorybookProject {
     // Leading (zero or more) dot(s) and the following dot(s)
     const filename = path.basename(absolutePath).replace(/^(\.*[^.]+).*/, "$1");
 
-    const absoluteFilename = path.join(dirname, filename);
+    const absoluteFilename = path.join(
+      dirname,
+      // If "index.*" is the target, search file has name starting with parent dirname
+      filename === "index" ? path.basename(dirname) : filename,
+    );
 
     const absoluteStoryPath = (
       await glob(
