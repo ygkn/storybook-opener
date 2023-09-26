@@ -35,7 +35,7 @@
 ## Features
 
 - **Efficiency**: Open Storybook directly from your active file.
-- **Colocation Support**: Instantly open `SomeComponent` story from associated files like `SomeComponent.tsx` or `SomeComponent.module.css`.
+- **Colocation Support**: Instantly open `SomeComponent` story from associated files like `SomeComponent.tsx`, `SomeComponent.module.css` or `index.ts`.
 - **Auto Server Start**: If your Storybook server isn't running, it'll initiate it for you.
 - **Adaptable**: Seamlessly syncs with your project settings.
 
