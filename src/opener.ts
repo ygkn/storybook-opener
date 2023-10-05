@@ -3,47 +3,82 @@ import * as vscode from "vscode";
 import { getConfig } from "./config";
 import { isRunning, waitForRunning } from "./server-checking";
 
+const shouldRunStorybook = async (): Promise<boolean> => {
+  const config = getConfig();
+
+  if (config.doNotAskToAutoStart === true) {
+    return true;
+  }
+
+  const answer = await vscode.window.showInformationMessage(
+    [
+      "Storybook seems not running.",
+      "Would you like to start Storybook?",
+      "You can change this setting in the user settings.",
+    ].join("\n"),
+    "Yes",
+    "Yes, and don't ask again",
+    "No",
+  );
+
+  if (answer === "No") {
+    return false;
+  }
+
+  if (answer === "Yes, and don't ask again") {
+    await vscode.workspace
+      .getConfiguration("storybook-opener")
+      .update("doNotAskToAutoStart", true, true);
+
+    await vscode.window.showInformationMessage(
+      [
+        "OK, I won't ask you again.",
+        "The setting `storybook-opener.doNotAskToAutoStart` is now set to `true` globally.",
+        "You can change this setting in the user settings.",
+      ].join("\n"),
+    );
+  }
+
+  return true;
+};
+
+const startStorybook = () => {
+  const config = getConfig();
+  const httpsOption = config.storybookOption.https ? "--https" : "";
+  const hostOption =
+    config.storybookOption.host === "localhost" ||
+    config.storybookOption.host === ""
+      ? ""
+      : `--host ${config.storybookOption.host}`;
+  const portOption = `-p ${config.storybookOption.port}`;
+  const startCommand = config.startCommand;
+
+  const options = [httpsOption, hostOption, portOption, "--no-open"]
+    .filter(Boolean)
+    .join(" ");
+
+  const command = startCommand || `npx storybook dev ${options}`;
+
+  const newTerminal = vscode.window.createTerminal({
+    name: "Run Storybook",
+  });
+  newTerminal.show();
+  newTerminal.sendText(command, true);
+};
+
 export const openStory = async (storyUrl: string) => {
   const storybookStarted = await isRunning(storyUrl);
 
   if (!storybookStarted) {
-    await vscode.window
-      .showInformationMessage(
-        "Storybook Server seems to have not been started yet. Would you like to start?",
-        "Yes",
-        "No",
-      )
-      .then(async (answer) => {
-        if (answer !== "Yes") {
-          return;
-        }
+    if (!(await shouldRunStorybook())) {
+      return;
+    }
 
-        const config = getConfig();
-        const httpsOption = config.storybookOption.https ? "--https" : "";
-        const hostOption =
-          config.storybookOption.host === "localhost" ||
-          config.storybookOption.host === ""
-            ? ""
-            : `--host ${config.storybookOption.host}`;
-        const portOption = `-p ${config.storybookOption.port}`;
-        const startCommand = config.startCommand;
+    startStorybook();
 
-        const options = [httpsOption, hostOption, portOption, "--no-open"]
-          .filter(Boolean)
-          .join(" ");
-
-        const command = startCommand || `npx storybook dev ${options}`;
-
-        const newTerminal = vscode.window.createTerminal({
-          name: "Run Storybook",
-        });
-        newTerminal.show();
-        newTerminal.sendText(command, true);
-
-        if (storyUrl) {
-          await waitForRunning(storyUrl);
-        }
-      });
+    if (storyUrl) {
+      await waitForRunning(storyUrl);
+    }
   }
 
   const { openInEditor } = getConfig();
