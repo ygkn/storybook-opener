@@ -26,7 +26,7 @@ export const openStory = async (storyUrl: string) => {
             ? ""
             : `--host ${config.storybookOption.host}`;
         const portOption = `-p ${config.storybookOption.port}`;
-        const startCommand = config.storybookOption.startCommand;
+        const startCommand = config.startCommand;
 
         const options = [httpsOption, hostOption, portOption, "--no-open"]
           .filter(Boolean)

@@ -52,7 +52,7 @@
 
 ### Running the Storybook dev server and other commands
 
-If you need to execute other commands, such as code generation, to launch the Storybook dev server, you can use the [`npm-run-all`](https://github.com/mysticatea/npm-run-all) or [`concurrently`](https://github.com/open-cli-tools/concurrently) packages in conjunction with the `storybook-opener.storybookOption.startCommand` option.
+If you need to execute other commands, such as code generation, to launch the Storybook dev server, you can use the [`npm-run-all`](https://github.com/mysticatea/npm-run-all) or [`concurrently`](https://github.com/open-cli-tools/concurrently) packages in conjunction with the `storybook-opener.startCommand` option.
 
 For example, think about a project requires running the `watch` script alongside the `storybook dev` command, and it have a `package.json` set up with `scripts` as follows:
 
@@ -68,11 +68,11 @@ For example, think about a project requires running the `watch` script alongside
 
 `-- {1}` is [argument placeholder](https://github.com/mysticatea/npm-run-all/blob/master/docs/run-p.md#argument-placeholders) of `npm-run-all` package.
 
-Additionally, configure the `storybook-opener.storybookOption.startCommand` option like this:
+Additionally, configure the `storybook-opener.startCommand` option like this:
 
 ```json
 {
-  "storybook-opener.storybookOption.startCommand": "npm run storybook -- --no-open"
+  "storybook-opener.startCommand": "npm run storybook -- --no-open"
 }
 ```
 
@@ -159,14 +159,14 @@ Furthermore, using different port numbers for each package allows efficient chec
 }
 ```
 
-#### Setting `storybook-opener.storybookOption.configDir` and `storybook-opener.storybookOption.startCommand` options
+#### Setting `storybook-opener.storybookOption.configDir` and `storybook-opener.startCommand` options
 
-If you have just one package using Storybook and you don't want to use multi-root workspaces, you can use Storybook Opener by configuring the `storybook-opener.storybookOption.configDir` and `storybook-opener.storybookOption.startCommand` options.
+If you have just one package using Storybook and you don't want to use multi-root workspaces, you can use Storybook Opener by configuring the `storybook-opener.storybookOption.configDir` and `storybook-opener.startCommand` options.
 
 ```json
 {
   "storybook-opener.storybookOption.configDir": "apps/web/.storybook",
-  "storybook-opener.storybookOption.startCommand": "npm run storybook -w apps/web -- --no-open"
+  "storybook-opener.startCommand": "npm run storybook -w apps/web -- --no-open"
 }
 ```
 
@@ -212,14 +212,14 @@ Same to `--https` option of [Storybook CLI Options](https://storybook.js.org/doc
 
 ### Options to run Storybook
 
-#### `storybook-opener.storybookOption.startCommand`
+#### `storybook-opener.startCommand`
 
 - **Type**: `string`
 - **Default**: `""`
 
 Command to run when starting a Storybook.
 
-By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it.
+By default, Storybook Opener will run `npx storybook dev --no-open ${options}` with options built from `storybook-opener.storybookOption` options.
 
 #### `storybook-opener.openInEditor.enable`
 

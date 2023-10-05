@@ -55,9 +55,9 @@
     "configuration": {
       "title": "Storybook Opener",
       "properties": {
-        "storybook-opener.storybookOption.startCommand": {
+        "storybook-opener.startCommand": {
           "type": "string",
-          "description": "Command to run when starting a Storybook. By default, Storybook Opener detects the package manager you are using and executes the `storybook` task with it.",
+          "description": "Command to run when starting a Storybook. By default, Storybook Opener will run `npx storybook dev --no-open ${options}` with options built from `storybook-opener.storybookOption` options.",
           "scope": "resource"
         },
         "storybook-opener.storybookOption.configDir": {

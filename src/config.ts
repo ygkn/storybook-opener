@@ -18,7 +18,6 @@ export const getConfig = () => {
     port: storybookOptionConfiguration.get<number>("port")!,
     host: storybookOptionConfiguration.get<string>("host")!,
     https: storybookOptionConfiguration.get<boolean>("https")!,
-    startCommand: storybookOptionConfiguration.get<string>("startCommand")!,
   };
 
   const openInEditorConfiguration = vscode.workspace.getConfiguration(
@@ -31,8 +30,13 @@ export const getConfig = () => {
     follow: openInEditorConfiguration.get<boolean>("follow")!,
   };
 
+  const startCommand = vscode.workspace
+    .getConfiguration("storybook-opener", workspaceFolder)
+    .get<string>("startCommand");
+
   return {
     storybookOption,
     openInEditor,
+    startCommand,
   };
 };
