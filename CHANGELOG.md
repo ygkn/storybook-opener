@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.0.0
+
+- **BREAKING CHANGE**: change option `storybook-opener.doNotAskToAutoStart` -> `storybook-opener.autoStartBegavior`
+
 ## 2.0.0
 
 - feature: add "Yes, and don't ask again" option to the dialog to start Storybook automatically
