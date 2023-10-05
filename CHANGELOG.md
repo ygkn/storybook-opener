@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.3.1
+
+- refactor some code
+
 # 1.3.0
 
 - feat: support `openInEditor` options. It allows you to open storybook in vscode SimpleBrowser and automatically follow the opening file. Thanks [@nnnnusui](https://github.com/nnnnusui)
