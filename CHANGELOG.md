@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.0.0
+
+- feature: add "Yes, and don't ask again" option to the dialog to start Storybook automatically
+- **BREAKING CHANGE**: fix setting name `storybook-opener.storybookOption.startCommand` -> `storybook-opener.startCommand`
+
 # 1.3.1
 
 - refactor some code
