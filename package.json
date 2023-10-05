@@ -61,7 +61,7 @@
           "scope": "resource"
         },
         "storybook-opener.autoStartBehavior": {
-          "type": "boolean",
+          "type": "string",
           "default": false,
           "description": "The behavior when Storybook server is not running.",
           "enum": [
