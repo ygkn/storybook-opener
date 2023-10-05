@@ -221,12 +221,17 @@ Command to run when starting a Storybook.
 
 By default, Storybook Opener will run `npx storybook dev --no-open ${options}` with options built from `storybook-opener.storybookOption` options.
 
-#### `storybook-opener.doNotAskToAutoStart`
+#### `storybook-opener.autoStartBehavior`
 
-- **Type**: `boolean`
-- **Default**: `false`
+- **Type**: `string`
+- **Default**: `"ask"`
+- **Enum**: `"ask"`, `"always"`, `"never"`
 
-When enabled, Storybook Opener will not ask to start Storybook server automatically.
+The behavior when Storybook server is not running.
+
+- `ask`: Ask before starting Storybook server.
+- `always`: Always automatically start Storybook server without asking.
+- `never`: Never automatically start Storybook server without asking.
 
 #### `storybook-opener.openInEditor.enable`
 

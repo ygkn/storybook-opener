@@ -6,8 +6,12 @@ import { isRunning, waitForRunning } from "./server-checking";
 const shouldRunStorybook = async (): Promise<boolean> => {
   const config = getConfig();
 
-  if (config.doNotAskToAutoStart === true) {
+  if (config.autoStartBehavior === "always") {
     return true;
+  }
+
+  if (config.autoStartBehavior === "never") {
+    return false;
   }
 
   const answer = await vscode.window.showInformationMessage(
@@ -28,12 +32,12 @@ const shouldRunStorybook = async (): Promise<boolean> => {
   if (answer === "Yes, and don't ask again") {
     await vscode.workspace
       .getConfiguration("storybook-opener")
-      .update("doNotAskToAutoStart", true, true);
+      .update("autoStartBehavior", "always", true);
 
     await vscode.window.showInformationMessage(
       [
         "OK, I won't ask you again.",
-        "The setting `storybook-opener.doNotAskToAutoStart` is now set to `true` globally.",
+        'The setting `storybook-opener.autoStartBehavior` is now set to `"always"` globally.',
         "You can change this setting in the user settings.",
       ].join("\n"),
     );

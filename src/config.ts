@@ -34,14 +34,14 @@ export const getConfig = () => {
     .getConfiguration("storybook-opener", workspaceFolder)
     .get<string>("startCommand");
 
-  const doNotAskToAutoStart = vscode.workspace
+  const autoStartBehavior = vscode.workspace
     .getConfiguration("storybook-opener", workspaceFolder)
-    .get<boolean>("doNotAskToAutoStart");
+    .get<"ask" | "always" | "never">("autoStartBehavior");
 
   return {
     storybookOption,
     openInEditor,
     startCommand,
-    doNotAskToAutoStart,
+    autoStartBehavior,
   };
 };
