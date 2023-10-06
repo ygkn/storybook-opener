@@ -87,7 +87,7 @@ export const openStory = async (storyUrl: string) => {
 
   const { openInEditor } = getConfig();
 
-  if (openInEditor) {
+  if (openInEditor.enable) {
     vscode.commands.executeCommand("simpleBrowser.api.open", storyUrl, {
       preserveFocus: false,
       viewColumn: vscode.ViewColumn.Two,
