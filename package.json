@@ -62,7 +62,7 @@
         },
         "storybook-opener.autoStartBehavior": {
           "type": "string",
-          "default": false,
+          "default": "ask",
           "description": "The behavior when Storybook server is not running.",
           "enum": [
             "ask",
