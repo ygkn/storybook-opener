@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.0.4
+
+- feature: support v7.5
+
 ## 3.0.0
 
 - **BREAKING CHANGE**: change option `storybook-opener.doNotAskToAutoStart` -> `storybook-opener.autoStartBegavior`
