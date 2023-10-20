@@ -154,9 +154,17 @@ export class StorybookProject {
       });
     }
 
-    const indexInputs = await indexer.index(absolutePath, {
-      makeTitle: defaultMakeTitle,
-    });
+    const indexInputs =
+      // Support v7.4.*
+      // @ts-expect-error TS2551
+      indexer.index !== undefined
+        ? // @ts-expect-error TS2551
+          await (indexer.index as typeof indexer.createIndex)(absolutePath, {
+            makeTitle: defaultMakeTitle,
+          })
+        : await indexer.createIndex(absolutePath, {
+            makeTitle: defaultMakeTitle,
+          });
 
     const input = indexInputs[0];
 
