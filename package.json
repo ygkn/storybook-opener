@@ -125,7 +125,7 @@
     "lint": "concurrently npm:lint:*"
   },
   "devDependencies": {
-    "@tsconfig/strictest": "2.0.2",
+    "@tsconfig/strictest": "2.0.3",
     "@types/mocha": "10.0.6",
     "@types/node": "20.11.17",
     "@types/vscode": "1.60.0",
