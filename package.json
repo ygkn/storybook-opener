@@ -143,6 +143,6 @@
     "mocha": "10.4.0",
     "prettier": "3.2.5",
     "storybook": "7.6.17",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   }
 }
