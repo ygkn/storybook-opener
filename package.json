@@ -142,7 +142,7 @@
     "eslint-plugin-unused-imports": "4.1.4",
     "mocha": "10.7.3",
     "prettier": "3.3.3",
-    "storybook": "7.6.20",
+    "storybook": "8.3.6",
     "typescript": "5.6.3"
   }
 }
