@@ -125,6 +125,7 @@
     "lint": "concurrently npm:lint:*"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@tsconfig/strictest": "2.0.5",
     "@types/mocha": "10.0.9",
     "@types/node": "22.9.0",
@@ -134,14 +135,7 @@
     "@vscode/test-electron": "2.4.1",
     "concurrently": "9.1.0",
     "esbuild": "0.24.0",
-    "eslint": "8.57.1",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-import-resolver-typescript": "3.6.3",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-import-access": "2.2.2",
-    "eslint-plugin-unused-imports": "4.1.4",
     "mocha": "10.8.2",
-    "prettier": "3.3.3",
     "storybook": "7.6.20",
     "typescript": "5.6.3"
   }

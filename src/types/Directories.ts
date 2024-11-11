@@ -1,5 +1,5 @@
 /** @public */
 export type Directories = {
-  configDir: string;
-  workingDir: string;
+	configDir: string;
+	workingDir: string;
 };

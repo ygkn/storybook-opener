@@ -1,47 +1,47 @@
 import * as vscode from "vscode";
 
 export const getConfig = () => {
-  const workspaceFolder =
-    vscode.window.activeTextEditor === undefined
-      ? undefined
-      : vscode.workspace.getWorkspaceFolder(
-          vscode.window.activeTextEditor.document.uri,
-        );
+	const workspaceFolder =
+		vscode.window.activeTextEditor === undefined
+			? undefined
+			: vscode.workspace.getWorkspaceFolder(
+					vscode.window.activeTextEditor.document.uri,
+				);
 
-  const storybookOptionConfiguration = vscode.workspace.getConfiguration(
-    "storybook-opener.storybookOption",
-    workspaceFolder,
-  );
+	const storybookOptionConfiguration = vscode.workspace.getConfiguration(
+		"storybook-opener.storybookOption",
+		workspaceFolder,
+	);
 
-  const storybookOption = {
-    configDir: storybookOptionConfiguration.get<string>("configDir")!,
-    port: storybookOptionConfiguration.get<number>("port")!,
-    host: storybookOptionConfiguration.get<string>("host")!,
-    https: storybookOptionConfiguration.get<boolean>("https")!,
-  };
+	const storybookOption = {
+		configDir: storybookOptionConfiguration.get<string>("configDir")!,
+		port: storybookOptionConfiguration.get<number>("port")!,
+		host: storybookOptionConfiguration.get<string>("host")!,
+		https: storybookOptionConfiguration.get<boolean>("https")!,
+	};
 
-  const openInEditorConfiguration = vscode.workspace.getConfiguration(
-    "storybook-opener.openInEditor",
-    workspaceFolder,
-  );
+	const openInEditorConfiguration = vscode.workspace.getConfiguration(
+		"storybook-opener.openInEditor",
+		workspaceFolder,
+	);
 
-  const openInEditor = {
-    enable: openInEditorConfiguration.get<boolean>("enable")!,
-    follow: openInEditorConfiguration.get<boolean>("follow")!,
-  };
+	const openInEditor = {
+		enable: openInEditorConfiguration.get<boolean>("enable")!,
+		follow: openInEditorConfiguration.get<boolean>("follow")!,
+	};
 
-  const startCommand = vscode.workspace
-    .getConfiguration("storybook-opener", workspaceFolder)
-    .get<string>("startCommand");
+	const startCommand = vscode.workspace
+		.getConfiguration("storybook-opener", workspaceFolder)
+		.get<string>("startCommand");
 
-  const autoStartBehavior = vscode.workspace
-    .getConfiguration("storybook-opener", workspaceFolder)
-    .get<"ask" | "always" | "never">("autoStartBehavior");
+	const autoStartBehavior = vscode.workspace
+		.getConfiguration("storybook-opener", workspaceFolder)
+		.get<"ask" | "always" | "never">("autoStartBehavior");
 
-  return {
-    storybookOption,
-    openInEditor,
-    startCommand,
-    autoStartBehavior,
-  };
+	return {
+		storybookOption,
+		openInEditor,
+		startCommand,
+		autoStartBehavior,
+	};
 };
