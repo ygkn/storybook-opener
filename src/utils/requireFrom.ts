@@ -1,4 +1,3 @@
 /** @public */
-export const requireFrom = function (id: string, dir: string) {
-	return require(require.resolve(id, { paths: [dir] }));
-};
+export const requireFrom = (id: string, dir: string) =>
+	require(require.resolve(id, { paths: [dir] }));

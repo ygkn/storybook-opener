@@ -1,20 +1,20 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 import type {
+	ComponentTitle,
+	DeprecatedIndexer,
 	DocsOptions,
-	StoryIndexer,
-	StorybookConfig,
 	Indexer,
 	NormalizedStoriesSpecifier,
-	DeprecatedIndexer,
-	ComponentTitle,
 	Path,
+	StoryIndexer,
 	StoryName,
+	StorybookConfig,
 	Tag,
 } from "@storybook/types";
 
-import { Directories } from "@/types/Directories";
+import type { Directories } from "@/types/Directories";
 import { requireFrom } from "@/utils/requireFrom";
 
 import { loadPresets } from "./loadPresets";
@@ -122,7 +122,7 @@ export class StorybookProject {
 			"@storybook/core-common",
 			this.workingDir,
 		) as typeof import("@storybook/core-common");
-
+		// biome-ignore format: <explanation>
 		const slash = requireFrom("slash", this.workingDir) as typeof import(
 			"slash"
 		);
@@ -134,6 +134,7 @@ export class StorybookProject {
 		const relativePath = path.relative(this.workingDir, absolutePath);
 		const importPath = slash(normalizeStoryPath(relativePath));
 		const defaultMakeTitle = (userTitle?: string) => {
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
 			return userOrAutoTitle(importPath, this.specifiers, userTitle)!;
 		};
 
@@ -198,9 +199,8 @@ export class StorybookProject {
 			const id = toId(metaId ?? title, this.docs.defaultName ?? "Docs");
 
 			return `/docs/${id}`;
-		} else {
-			return `/${input.type}/${id}`;
 		}
+		return `/${input.type}/${id}`;
 	}
 	private async getStoryPathFromDeprecatedIndexer({
 		indexer,
@@ -227,6 +227,7 @@ export class StorybookProject {
 			//  b) we have docs page enabled for this file
 			if ((csf.meta.tags ?? []).includes(STORIES_MDX_TAG) || autodocsOptedIn) {
 				const name = this.docs.defaultName ?? "Docs";
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
 				const id = toId(csf.meta.id || csf.meta.title!, name);
 
 				return `/docs/${id}`;
@@ -259,10 +260,12 @@ export class StorybookProject {
 			this.workingDir,
 		) as typeof import("@storybook/core-common");
 
+		// biome-ignore format: <explanation>
 		const slash = requireFrom("slash", this.workingDir) as typeof import(
 			"slash"
 		);
 
+		// biome-ignore format: <explanation>
 		const glob = requireFrom("globby", this.workingDir) as typeof import(
 			"globby"
 		);
@@ -313,9 +316,11 @@ export class StorybookProject {
 	private async getColocatedStoryPath(
 		absolutePath: string,
 	): Promise<string | undefined> {
+		// biome-ignore format: <explanation>
 		const glob = requireFrom("globby", this.workingDir) as typeof import(
 			"globby"
 		);
+		// biome-ignore format: <explanation>
 		const slash = requireFrom("slash", this.workingDir) as typeof import(
 			"slash"
 		);

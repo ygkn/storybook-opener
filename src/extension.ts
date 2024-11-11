@@ -150,7 +150,7 @@ export async function activate(
 ): Promise<void> {
 	if (
 		vscode.workspace.workspaceFolders === undefined ||
-		vscode.workspace.workspaceFolders.length == 0
+		vscode.workspace.workspaceFolders.length === 0
 	) {
 		return;
 	}

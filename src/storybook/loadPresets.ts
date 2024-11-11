@@ -1,8 +1,8 @@
-import { join } from "path";
+import { join } from "node:path";
 
 import type { CoreConfig } from "@storybook/types";
 
-import { Directories } from "@/types/Directories";
+import type { Directories } from "@/types/Directories";
 import { requireFrom } from "@/utils/requireFrom";
 
 import { getBuilders } from "./get-builders";
@@ -23,15 +23,14 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
 		workingDir,
 	) as typeof import("@storybook/core-common");
 
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
 	const { packageJson } = (await (
 		requireFrom("read-pkg-up", workingDir) as typeof import("read-pkg-up")
 	)({
 		cwd: workingDir,
 	}))!;
 
-	global.process.cwd = function () {
-		return workingDir;
-	};
+	global.process.cwd = () => workingDir;
 
 	const options = {
 		configDir,
@@ -90,7 +89,8 @@ export async function loadPresets({ workingDir, configDir }: Directories) {
 			...(managerBuilder.corePresets || []),
 			...(previewBuilder.corePresets || []),
 			...(renderer
-				? [resolveAddonName(options.configDir, renderer, options)!]
+				? // biome-ignore lint/style/noNonNullAssertion: <explanation>
+					[resolveAddonName(options.configDir, renderer, options)!]
 				: []),
 			...corePresets,
 			...[

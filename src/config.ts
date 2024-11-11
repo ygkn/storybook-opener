@@ -14,9 +14,13 @@ export const getConfig = () => {
 	);
 
 	const storybookOption = {
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		configDir: storybookOptionConfiguration.get<string>("configDir")!,
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		port: storybookOptionConfiguration.get<number>("port")!,
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		host: storybookOptionConfiguration.get<string>("host")!,
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		https: storybookOptionConfiguration.get<boolean>("https")!,
 	};
 
@@ -26,7 +30,9 @@ export const getConfig = () => {
 	);
 
 	const openInEditor = {
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		enable: openInEditorConfiguration.get<boolean>("enable")!,
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		follow: openInEditorConfiguration.get<boolean>("follow")!,
 	};
 
