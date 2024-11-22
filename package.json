@@ -134,6 +134,6 @@
     "esbuild": "0.24.0",
     "mocha": "10.8.2",
     "storybook": "7.6.20",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   }
 }
