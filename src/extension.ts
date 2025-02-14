@@ -4,12 +4,18 @@ import { getConfig } from "./config";
 import { followStory, openStory } from "./opener";
 import { StorybookProject } from "./storybook";
 
-const workspaceCache = new Map<
+const workspaces = new Map<
 	string,
-	{
-		storybookProject: StorybookProject;
-		storybookProjectConfigWatcher: vscode.FileSystemWatcher;
-	}
+	| {
+			type: "failed";
+			storybookProjectConfigWatcher: vscode.FileSystemWatcher;
+	  }
+	| {
+			type: "loaded";
+			storybookProject: StorybookProject;
+			storybookProjectConfigWatcher: vscode.FileSystemWatcher;
+			storiesWatchers: vscode.FileSystemWatcher[];
+	  }
 >();
 
 let activeEditorStoryUrl: string | null = null;
@@ -17,11 +23,21 @@ let activeEditorStoryUrl: string | null = null;
 const loadWorkspace = async (workspaceFolder: vscode.WorkspaceFolder) => {
 	const workingDir = workspaceFolder.uri.fsPath;
 
-	workspaceCache.get(workingDir)?.storybookProjectConfigWatcher.dispose();
-
-	workspaceCache.delete(workingDir);
-
 	const config = getConfig();
+
+	const existingWorkspace = workspaces.get(workingDir);
+
+	if (existingWorkspace !== undefined) {
+		existingWorkspace.storybookProjectConfigWatcher.dispose();
+
+		if (existingWorkspace.type === "loaded") {
+			for (const watcher of existingWorkspace.storiesWatchers) {
+				watcher.dispose();
+			}
+		}
+
+		workspaces.delete(workingDir);
+	}
 
 	const configDir = vscode.Uri.joinPath(
 		workspaceFolder.uri,
@@ -47,7 +63,7 @@ const loadWorkspace = async (workspaceFolder: vscode.WorkspaceFolder) => {
 	);
 
 	try {
-		const storybookProject = await StorybookProject.load(
+		const { storybookProject, storiesGlob } = await StorybookProject.load(
 			{
 				configDir,
 				workingDir,
@@ -55,18 +71,41 @@ const loadWorkspace = async (workspaceFolder: vscode.WorkspaceFolder) => {
 			() => getConfig().storybookOption,
 		);
 
-		workspaceCache.set(workingDir, {
+		const storiesWatchers = storiesGlob.map((storyGlob) =>
+			vscode.workspace.createFileSystemWatcher(storyGlob),
+		);
+
+		for (const watcher of storiesWatchers) {
+			watcher.onDidCreate((uri) =>
+				storybookProject.invalidate(uri.fsPath, false),
+			);
+			watcher.onDidChange((uri) =>
+				storybookProject.invalidate(uri.fsPath, false),
+			);
+			watcher.onDidDelete((uri) =>
+				storybookProject.invalidate(uri.fsPath, true),
+			);
+		}
+
+		workspaces.set(workingDir, {
+			type: "loaded",
 			storybookProject,
 			storybookProjectConfigWatcher,
+			storiesWatchers,
 		});
+		console.log("[storybook-opener] Loaded workspace", workingDir);
 	} catch (e) {
-		console.error(e);
+		workspaces.set(workingDir, {
+			type: "failed",
+			storybookProjectConfigWatcher,
+		});
+		console.error("[storybook-opener] Failed to load workspace", e);
 	}
 };
 
-const getStoryUrlFromEditor = async (
+const getStoryUrlFromEditor = (
 	editor: vscode.TextEditor | undefined,
-): Promise<string | null> => {
+): string | null => {
 	if (editor === undefined) {
 		return null;
 	}
@@ -77,23 +116,21 @@ const getStoryUrlFromEditor = async (
 		return null;
 	}
 
-	const cacheHit = workspaceCache.get(workspace.uri.fsPath);
+	const workspaceHit = workspaces.get(workspace.uri.fsPath);
 
-	if (cacheHit === undefined) {
+	if (workspaceHit === undefined || workspaceHit.type === "failed") {
 		return null;
 	}
 
 	return (
-		(await cacheHit.storybookProject.getStorybookUrl(
-			editor.document.uri.fsPath,
-		)) ?? null
+		workspaceHit.storybookProject.getStorybookUrl(editor.document.uri.fsPath) ??
+		null
 	);
 };
 
-const onCurrentEditorChanged = async (
-	editor: vscode.TextEditor | undefined,
-) => {
-	activeEditorStoryUrl = await getStoryUrlFromEditor(editor);
+const onCurrentEditorChanged = (editor: vscode.TextEditor | undefined) => {
+	activeEditorStoryUrl = getStoryUrlFromEditor(editor);
+	console.log("[storybook-opener] Active editor changed", activeEditorStoryUrl);
 
 	if (activeEditorStoryUrl === null) {
 		vscode.commands.executeCommand(
@@ -130,7 +167,7 @@ const showWhyCannotOpenStory = async () => {
 		return;
 	}
 
-	if (workspaceCache.get(workspace.uri.fsPath) === undefined) {
+	if (workspaces.get(workspace.uri.fsPath) === undefined) {
 		await vscode.window.showInformationMessage(
 			"Something went wrong when Storybook config.",
 		);
@@ -155,7 +192,7 @@ export async function activate(
 		return;
 	}
 
-	Promise.all(
+	await Promise.all(
 		vscode.workspace.workspaceFolders.map((workspaceFolder) =>
 			loadWorkspace(workspaceFolder),
 		),
@@ -171,12 +208,13 @@ export async function activate(
 					)
 				) {
 					await loadWorkspace(workspaceFolder);
-					await onCurrentEditorChanged(vscode.window.activeTextEditor);
+					onCurrentEditorChanged(vscode.window.activeTextEditor);
 				}
 			}
 		}),
 		vscode.window.onDidChangeActiveTextEditor(onCurrentEditorChanged),
 		vscode.commands.registerCommand("storybook-opener.open", async () => {
+			console.log("[storybook-opener] open", activeEditorStoryUrl);
 			if (activeEditorStoryUrl === null) {
 				await showWhyCannotOpenStory();
 
@@ -187,14 +225,25 @@ export async function activate(
 		}),
 		{
 			dispose() {
-				for (const [_, { storybookProjectConfigWatcher }] of workspaceCache) {
-					storybookProjectConfigWatcher.dispose();
+				for (const [_, workspace] of workspaces) {
+					if (workspace.type === "loaded") {
+						workspace.storybookProjectConfigWatcher.dispose();
+
+						for (const watcher of workspace.storiesWatchers) {
+							watcher.dispose();
+						}
+					}
+
+					workspace.storybookProjectConfigWatcher.dispose();
 				}
 			},
 		},
 	);
+
+	console.log("[storybook-opener] activated!");
 }
 
 export function deactivate() {
+	console.log("[storybook-opener] deactivate");
 	//
 }
