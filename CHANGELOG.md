@@ -1,5 +1,10 @@
 # Change Log
 
+## 4.0.0
+
+- feat: support Storybook v8
+- **BREAKING CHANGE**: Require Storybook v8.5.0 or higher
+
 ## 3.0.4
 
 - feature: support v7.5
