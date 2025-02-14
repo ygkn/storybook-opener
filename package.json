@@ -6,7 +6,7 @@
   "version": "3.0.4",
   "publisher": "ygkn",
   "engines": {
-    "vscode": "^2023.0.0"
+    "vscode": "^1.60.0"
   },
   "categories": [
     "Other"
@@ -133,7 +133,10 @@
     "concurrently": "9.1.2",
     "esbuild": "0.25.0",
     "mocha": "11.1.0",
-    "storybook": "7.6.20",
+    "storybook": "8.5.5",
     "typescript": "5.7.3"
+  },
+  "dependencies": {
+    "slash": "^5.1.0"
   }
 }
