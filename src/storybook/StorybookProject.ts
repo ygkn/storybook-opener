@@ -91,10 +91,6 @@ export class StorybookProject {
 			mapImportFilenameToColocatedStoryPath;
 	}
 
-	/**
-	 * @see `getStoryIndexGenerator` in `@storybook/core-server`
-	 * https://github.com/storybookjs/storybook/blob/4b0b3acf8c15c7b4f6a31779c3d2cccfe3526911/code/lib/core-server/src/utils/getStoryIndexGenerator.ts
-	 */
 	public static async load(
 		{ workingDir, configDir }: Directories,
 		getOption: StorybookProject["getOption"],
