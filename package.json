@@ -133,7 +133,7 @@
     "concurrently": "9.1.2",
     "esbuild": "0.25.4",
     "mocha": "11.2.2",
-    "storybook": "8.6.13",
+    "storybook": "8.6.14",
     "typescript": "5.8.3"
   },
   "dependencies": {
