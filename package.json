@@ -124,7 +124,7 @@
     "lint": "concurrently npm:lint:*"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.3.2",
     "@tsconfig/strictest": "2.0.7",
     "@types/mocha": "10.0.10",
     "@types/node": "24.9.2",
