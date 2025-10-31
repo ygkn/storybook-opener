@@ -1,25 +1,25 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "files": { "ignoreUnknown": false, "ignore": [] },
-  "formatter": { "enabled": true, "indentStyle": "tab" },
-  "organizeImports": { "enabled": true },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": {
-        "noNewSymbol": "error",
-        "noUnusedVariables": "error"
-      },
-      "style": {
-        "noNamespace": "error",
-        "useBlockStatements": "error"
-      },
-      "suspicious": {
-        "noEmptyBlockStatements": "error"
-      }
-    },
-    "ignore": ["**/out", "**/dist"]
-  }
+	"$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"files": { "ignoreUnknown": false, "includes": ["**"] },
+	"formatter": { "enabled": true, "indentStyle": "tab" },
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noInvalidBuiltinInstantiation": "error"
+			},
+			"style": {
+				"noNamespace": "error",
+				"useBlockStatements": "error"
+			},
+			"suspicious": {
+				"noEmptyBlockStatements": "error"
+			}
+		},
+		"includes": ["**", "!**/out", "!**/dist"]
+	}
 }

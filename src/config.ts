@@ -14,13 +14,13 @@ export const getConfig = () => {
 	);
 
 	const storybookOption = {
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		configDir: storybookOptionConfiguration.get<string>("configDir")!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		port: storybookOptionConfiguration.get<number>("port")!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		host: storybookOptionConfiguration.get<string>("host")!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		https: storybookOptionConfiguration.get<boolean>("https")!,
 	};
 
@@ -30,9 +30,9 @@ export const getConfig = () => {
 	);
 
 	const openInEditor = {
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		enable: openInEditorConfiguration.get<boolean>("enable")!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: has default value in package.json
 		follow: openInEditorConfiguration.get<boolean>("follow")!,
 	};
 
