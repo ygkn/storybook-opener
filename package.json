@@ -5,6 +5,7 @@
   "description": "Open Storybook quickly",
   "version": "4.0.0",
   "publisher": "ygkn",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -115,13 +116,12 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "build": "npm run esbuild-base -- --sourcemap",
-    "build:watch": "npm run esbuild-base -- --sourcemap --watch",
+    "vscode:prepublish": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "build:watch": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
     "lint:biome": "biome check src",
     "lint:ts": "tsc --noEmit",
-    "lint": "concurrently npm:lint:*"
+    "lint": "concurrently pnpm:lint:*"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
