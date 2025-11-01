@@ -5,6 +5,7 @@
   "description": "Open Storybook quickly",
   "version": "4.0.0",
   "publisher": "ygkn",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
     "vscode": "^1.60.0"
   },
