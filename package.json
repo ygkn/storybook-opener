@@ -131,7 +131,7 @@
     "@types/vscode": "1.60.0",
     "@vscode/test-electron": "2.5.2",
     "concurrently": "9.2.1",
-    "esbuild": "0.25.11",
+    "esbuild": "0.25.12",
     "mocha": "11.7.4",
     "storybook": "10.0.2",
     "typescript": "5.9.3"
