@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.0.1
+
+### Internal Changes
+
+- chore: migrate from npm to pnpm for package management
+- chore: update TypeScript module config for Storybook 10 ESM compatibility
+- chore: migrate Biome configuration to v2
+- chore: update dependencies
+
 ## 4.0.0
 
 - feat: support Storybook v8

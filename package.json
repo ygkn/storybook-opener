@@ -3,7 +3,7 @@
   "displayName": "Storybook Opener",
   "icon": "./assets/icon.png",
   "description": "Open Storybook quickly",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "publisher": "ygkn",
   "packageManager": "pnpm@10.20.0",
   "engines": {
