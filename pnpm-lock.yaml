@@ -40,8 +40,8 @@ importers:
         specifier: 11.7.5
         version: 11.7.5
       storybook:
-        specifier: 10.1.4
-        version: 10.1.4(@testing-library/dom@10.4.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: 10.1.5
+        version: 10.1.5(@testing-library/dom@10.4.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -798,8 +798,8 @@ packages:
     resolution: {integrity: sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==}
     engines: {node: '>=18'}
 
-  storybook@10.1.4:
-    resolution: {integrity: sha512-FrBjm8I8O+pYEOPHcdW9xWwgXSZxte7lza9q2lN3jFN4vuW79m5j0OnTQeR8z9MmIbBTvkIpp3yMBebl53Yt5Q==}
+  storybook@10.1.5:
+    resolution: {integrity: sha512-q3xB1pOcmmHUH9LfQNY/BWMGxp3fc1OALJf+F5BXIxHGQUEIizz6V1AbDOngWN9oWzuA8Gdz5rOCe7yelOMWVg==}
     hasBin: true
     peerDependencies:
       prettier: ^2 || ^3
@@ -1585,7 +1585,7 @@ snapshots:
 
   stdin-discarder@0.2.2: {}
 
-  storybook@10.1.4(@testing-library/dom@10.4.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  storybook@10.1.5(@testing-library/dom@10.4.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.0.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
