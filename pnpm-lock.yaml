@@ -31,8 +31,8 @@ importers:
         specifier: 2.5.2
         version: 2.5.2
       concurrently:
-        specifier: 10.0.0
-        version: 10.0.0
+        specifier: 10.0.1
+        version: 10.0.1
       esbuild:
         specifier: 0.28.0
         version: 0.28.0
@@ -602,8 +602,8 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  concurrently@10.0.0:
-    resolution: {integrity: sha512-DRrk10z3sVPpguNe8od2cGNqZGqbT15rwAnxD4dG3b78mdNNb/gJyr8T834Oj518WcBmTktrt4FhdwZn09ZWSg==}
+  concurrently@10.0.1:
+    resolution: {integrity: sha512-vN61cP9COzctyhBqKUOh9YHqU70hYPnaHqNpXdBzM9PcwIpfPAvNK06hjm4gEJEGuvy4GBairO6uU32+FKpS4g==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -1537,7 +1537,7 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  concurrently@10.0.0:
+  concurrently@10.0.1:
     dependencies:
       chalk: 5.6.2
       rxjs: 7.8.2
