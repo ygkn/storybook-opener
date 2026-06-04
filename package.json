@@ -130,7 +130,7 @@
     "@types/node": "24.12.4",
     "@types/vscode": "1.60.0",
     "@vscode/test-electron": "2.5.2",
-    "concurrently": "10.0.0",
+    "concurrently": "10.0.1",
     "esbuild": "0.28.0",
     "mocha": "11.7.6",
     "storybook": "10.1.11",
