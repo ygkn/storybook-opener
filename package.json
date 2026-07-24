@@ -134,7 +134,7 @@
     "esbuild": "0.28.1",
     "mocha": "11.7.6",
     "storybook": "10.1.11",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "slash": "^5.1.0"
